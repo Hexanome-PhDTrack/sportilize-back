@@ -1,10 +1,16 @@
-node_modules
+#modules
+node_modules/
 
-*.env
+#env variables
+.env
 
+#ide settings
 sportif-back.iml
 
 package-lock.json
 yarn.lock
 
-.idea
+.idea/
+
+#compiled
+dist/
