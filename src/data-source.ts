@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import 'reflect-metadata';
 import { UserEntity } from './databaseEntities/UserEntity';
 import { InfrastructureEntity } from './databaseEntities/InfrastructureEntity';
+import { SportEntity } from './databaseEntities/SportEntity';
 
 dotenv.config();
 
@@ -19,7 +20,13 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME,
   synchronize: true, //TODO don't forget this on prod
   logging: true,
-  entities: [UserEntity, UserAuthEntity, EventEntity, InfrastructureEntity],
+  entities: [
+    UserEntity,
+    UserAuthEntity,
+    EventEntity,
+    InfrastructureEntity,
+    SportEntity,
+  ],
   subscribers: [],
   migrations: [],
 });

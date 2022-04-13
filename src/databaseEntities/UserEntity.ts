@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  ManyToMany,
+} from 'typeorm';
+import { EventEntity } from './EventEntity';
 
 // @Unique(['username'])
 @Entity()
@@ -11,4 +18,9 @@ export class UserEntity {
 
   @Column()
   role: string;
+
+  @ManyToMany(type => EventEntity, event => event.participants, {
+    eager: true,
+  })
+  participatesToEvents: EventEntity[];
 }

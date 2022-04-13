@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 import { UserEntity } from './UserEntity';
+import { EventEntity } from './EventEntity';
 
 @Entity()
 export class UserAuthEntity extends UserEntity {
@@ -8,4 +15,9 @@ export class UserAuthEntity extends UserEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => EventEntity, event => event.creator, {
+    eager: true,
+  })
+  eventsCreated: EventEntity[];
 }
