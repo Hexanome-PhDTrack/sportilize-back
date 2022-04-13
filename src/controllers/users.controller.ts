@@ -32,7 +32,9 @@ class usersController implements Controller {
 
   private getUserEvents = (req: express.Request, res: express.Response) => {
     console.log(req.params);
-    res.send('AuthUser login');
+    res.send({
+      message: 'AuthUser login',
+    });
   };
 }
 

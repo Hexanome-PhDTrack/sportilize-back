@@ -34,12 +34,12 @@ export const AppDataSource = new DataSource({
 // AppDataSource.initialize()
 //   .then(async () => {
 //     console.log('Data Source has been initialized!');
-//     // const user = new UserEntity();
-//     // user.username = "pldtest1"
-//     // user.role = "unauthenticated"
+//     // const userAuthRepo = new UserEntity();
+//     // userAuthRepo.username = "pldtest1"
+//     // userAuthRepo.role = "unauthenticated"
 //     // console.log("test");
-//     // await AppDataSource.manager.save(user)
-//     // console.log("Photo has been saved. Photo id is", user.id)
+//     // await AppDataSource.manager.save(userAuthRepo)
+//     // console.log("Photo has been saved. Photo id is", userAuthRepo.id)
 //   })
 //   .catch(err => {
 //     console.error('Error during Data Source initialization', err);

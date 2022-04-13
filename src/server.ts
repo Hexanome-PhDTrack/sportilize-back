@@ -5,6 +5,10 @@ import validateEnv from './utils/validateEnv';
 
 validateEnv();
 
-const app = new App([new usersController(), new eventsController()]);
+async function main() {
+  const app = new App([new usersController(), new eventsController()]);
+  await app.connectToDb();
+  app.listen();
+}
 
-app.listen();
+main();

@@ -1,18 +1,16 @@
-import { Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
-// import { validate } from "class-validator";
-
-import config from '../config/config';
+import { NextFunction, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
 import * as express from 'express';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
-import { AppDataSource } from '../data-source';
+import AuthenticationService from '../services/auth.service';
+import loginDto from '../databaseEntities/LoginDto';
 
 //cf
 //https://github.com/andregardi/jwt-express-typeorm
 class AuthController implements Controller {
   public path = '/auth';
   public router = express.Router();
+  public authenticationService = new AuthenticationService();
 
   constructor() {
     this.initializeRoutes();
@@ -26,84 +24,73 @@ class AuthController implements Controller {
     this.router.post(`${this.path}/change_password`, this.changePassword);
   }
 
-  private register = async (req: Request, res: Response) => {
-    //TODO
+  private register = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const userData: UserAuthEntity = req.body;
+    try {
+      const { cookie, user } = await this.authenticationService.register(
+        userData,
+      );
+      res.setHeader('Set-Cookie', [cookie]);
+      console.log(user);
+      res.send(user);
+    } catch (e) {
+      next(e);
+    }
   };
 
-  private login = async (req: Request, res: Response) => {
-    //Check if username and password are set
-    let { username, password } = req.body;
-    if (!(username && password)) {
+  private login = async (req: Request, res: Response, next: NextFunction) => {
+    const loginData: loginDto = req.body;
+    if (!loginData) {
       res.status(400).send();
     }
 
-    //Get user from database
-    let user: UserAuthEntity;
     try {
-      user = await AppDataSource.getRepository(UserAuthEntity).findOneOrFail({
-        where: { username },
-      });
-    } catch (err) {
-      res.status(401).send();
+      const { cookie, user } = await this.authenticationService.login(
+        loginData,
+      );
+      res.setHeader('Set-Cookie', [cookie]);
+      console.log(user);
+      res.send(user);
+    } catch (e) {
+      next(e);
     }
-
-    //Sing JWT, valid for 1 hour
-    const token = jwt.sign(
-      { userId: user.id, username: user.username },
-      config.jwtSecret,
-      { expiresIn: '1h' },
-    );
-
-    //Send the jwt in the response
-    res.send(token);
   };
 
   private logout = async (req: Request, res: Response) => {
-    //TODO
+    const cookie = await this.authenticationService.logout();
+    res.setHeader('Set-Cookie', [cookie]);
+    res.send(200);
   };
 
-  private changePassword = async (req: Request, res: Response) => {
+  private changePassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     //Get ID from JWT
     const id = res.locals.jwtPayload.userId;
 
     //Get parameters from the body
-    const { oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword, email } = req.body;
     if (!(oldPassword && newPassword)) {
       res.status(400).send();
     }
 
-    //Get user from the database
-    let user: UserAuthEntity;
     try {
-      user = await AppDataSource.getRepository(UserAuthEntity).findOneOrFail({
-        where: { id },
-      });
-    } catch (err) {
-      res.status(401).send();
-    }
-
-    // //Check if old password matchs
-    // if (!user.checkIfUnencryptedPasswordIsValid(oldPassword)) {
-    //   res.status(401).send();
-    //   return;
-    // }
-
-    // //Validate the model (password length)
-    // user.password = newPassword;
-    // const errors = await validate(user);
-    // if (errors.length > 0) {
-    //   res.status(400).send(errors);
-    //   return;
-    // }
-    // //Hash the new password and save
-    // user.hashPassword();
-    try {
-      await AppDataSource.getRepository(UserAuthEntity).save(user);
+      await this.authenticationService.changePassword(
+        email,
+        oldPassword,
+        newPassword,
+      );
+      res.status(204).send();
     } catch (e) {
-      res.status(401).send();
+      next(e);
     }
-
-    res.status(204).send();
   };
 }
+
 export default AuthController;

@@ -12,7 +12,7 @@ const test = async () => {
     user.role = 'unauthenticated';
     console.log('test');
     await dbConnection.manager.save(user);
-    console.log('Photo has been saved. user id is', user.id);
+    console.log('Photo has been saved. userAuthRepo id is', user.id);
   };
 
   const findUserTest = async () => {

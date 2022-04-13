@@ -5,17 +5,17 @@ import loggerMiddleware from './middlewares/logger.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import dotenv from 'dotenv';
 import { AppDataSource } from './data-source';
+import { DataSource } from 'typeorm';
 dotenv.config();
 
 // https://github.com/mwanago/express-typescript/blob/master/src/app.ts
 class App {
   public app: express.Application;
-  // private dbConnection:DataSource;
+  public dbConnection: DataSource;
 
   constructor(controllers: Controller[]) {
     this.app = express();
-
-    this.connectToDb();
+    this.dbConnection = AppDataSource;
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling(); // this needs to be last in the app stack.
@@ -42,9 +42,7 @@ class App {
     });
   }
 
-  // Not sure this is useful
-  private async connectToDb() {
-    //TODO
+  public async connectToDb() {
     try {
       await AppDataSource.initialize();
     } catch (e) {
