@@ -22,7 +22,9 @@ class App {
   }
 
   private initializeMiddlewares() {
+    //parse body json in requests
     this.app.use(bodyParser.json());
+    //log requests
     this.app.use(loggerMiddleware);
   }
 

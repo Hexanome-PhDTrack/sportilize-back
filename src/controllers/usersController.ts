@@ -1,7 +1,7 @@
 import * as express from 'express';
 import Controller from '../interfaces/controller.interface';
 
-class usersController implements Controller {
+class UsersController implements Controller {
   public path = '/users';
   public router = express.Router();
 
@@ -19,23 +19,20 @@ class usersController implements Controller {
   }
 
   //User management
-  editUser = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
+  public editUser = (req: express.Request, res: express.Response) => {
     res.send('AuthUser login');
   };
 
   //Events interactions//
-  private joinEvent = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
+  public joinEvent = (req: express.Request, res: express.Response) => {
     res.send('AuthUser login');
   };
 
-  private getUserEvents = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
+  public getUserEvents = (req: express.Request, res: express.Response) => {
     res.send({
       message: 'AuthUser login',
     });
   };
 }
 
-export default usersController;
+export default UsersController;

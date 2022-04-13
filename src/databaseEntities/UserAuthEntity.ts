@@ -17,5 +17,5 @@ export class UserAuthEntity extends UserEntity {
   password: string;
 
   @OneToMany('EventEntity', 'userAuthEntity', {})
-  eventsCreated: EventEntity[];
+  eventsCreated?: EventEntity[];
 }

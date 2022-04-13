@@ -1,10 +1,9 @@
 import * as jwt from 'jsonwebtoken';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import TokenData from '../interfaces/tokenData.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken.interface';
 import { AppDataSource } from '../data-source';
-import config from '../config/config';
 import express from 'express';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
@@ -15,7 +14,7 @@ import HttpException from '../exceptions/HttpException';
 
 class AuthenticationService {
   public dbConnection: DataSource;
-  public userAuthRepo;
+  public userAuthRepo: Repository<UserAuthEntity>;
 
   constructor() {
     this.dbConnection = AppDataSource;
@@ -24,14 +23,18 @@ class AuthenticationService {
 
   public async register(userData: UserAuthEntity) {
     //Can't register 2 users with the same email
-    if (await this.userAuthRepo.findOne({ email: userData.email })) {
+    if (
+      await this.userAuthRepo.findOne({
+        where: { email: userData.email },
+      })
+    ) {
       throw new UserExistsException(userData.email);
     }
     const errors = await validate(userData);
     if (errors.length > 0) {
       throw new HttpException(400, JSON.stringify(errors));
     }
-    const user = await this.userAuthRepo.create(userData);
+    const user = await this.userAuthRepo.save(userData);
     const tokenData = this.createToken(user);
     const cookie = this.createCookie(tokenData);
     return {
