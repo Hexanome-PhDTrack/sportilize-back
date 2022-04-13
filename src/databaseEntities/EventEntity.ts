@@ -1,11 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 
 export class EventEntity {
-  @PrimaryGeneratedColumn({
-    type: 'integer',
-    name: 'id',
-  })
+  @PrimaryGeneratedColumn()
   id: number;
 
-  //TODO
+  infrastructure: string;
+
+  creator: string;
+
+  participants: string[];
+
+  sports: string[];
+
+  description: string;
+
+  beginDate: string;
+
+  closed: boolean;
+
+  review: string;
 }

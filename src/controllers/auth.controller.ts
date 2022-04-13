@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
 // import { validate } from "class-validator";
 
 import config from '../config/config';
@@ -21,9 +20,15 @@ class AuthController implements Controller {
 
   public initializeRoutes() {
     //Users auth
-    this.router.get(`${this.path}/login`, this.login);
-    this.router.put(`${this.path}/change_password`, this.changePassword);
+    this.router.post(`${this.path}/register`, this.register);
+    this.router.post(`${this.path}/login`, this.login);
+    this.router.post(`${this.path}/logout`, this.logout);
+    this.router.post(`${this.path}/change_password`, this.changePassword);
   }
+
+  private register = async (req: Request, res: Response) => {
+    //TODO
+  };
 
   private login = async (req: Request, res: Response) => {
     //Check if username and password are set
@@ -51,6 +56,10 @@ class AuthController implements Controller {
 
     //Send the jwt in the response
     res.send(token);
+  };
+
+  private logout = async (req: Request, res: Response) => {
+    //TODO
   };
 
   private changePassword = async (req: Request, res: Response) => {

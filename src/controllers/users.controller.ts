@@ -10,22 +10,27 @@ class usersController implements Controller {
   }
 
   public initializeRoutes() {
-    this.router.post(`${this.path}/signup`, this.signupUser);
-    this.router.get(`${this.path}/login`, this.loginUser);
+    //User management
     this.router.put(`${this.path}/edit`, this.editUser);
+
+    //Events interactions
+    this.router.put(`${this.path}/join_event`, this.joinEvent);
+    this.router.get(`${this.path}/user_events`, this.getUserEvents);
   }
 
-  signupUser = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
-    res.send('AuthUser signup');
-  };
-
-  loginUser = (req: express.Request, res: express.Response) => {
+  //User management
+  editUser = (req: express.Request, res: express.Response) => {
     console.log(req.params);
     res.send('AuthUser login');
   };
 
-  editUser = (req: express.Request, res: express.Response) => {
+  //Events interactions//
+  private joinEvent = (req: express.Request, res: express.Response) => {
+    console.log(req.params);
+    res.send('AuthUser login');
+  };
+
+  private getUserEvents = (req: express.Request, res: express.Response) => {
     console.log(req.params);
     res.send('AuthUser login');
   };

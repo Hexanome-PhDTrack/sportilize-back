@@ -21,10 +21,8 @@ class eventsController implements Controller {
     this.router.get(`${this.path}/list_events`, this.listEvents);
     this.router.get(`${this.path}/export_event`, this.exportEvent);
 
-    //Users actions
+    //
     this.router.put(`${this.path}/get_event`, this.getEvent);
-    this.router.put(`${this.path}/join_event`, this.joinEvent);
-    this.router.get(`${this.path}/user_events`, this.getUserEvents);
   }
 
   //Events management//
@@ -60,18 +58,6 @@ class eventsController implements Controller {
 
   private exportEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
-  };
-
-  //User interactions//
-
-  private joinEvent = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
-    res.send('AuthUser login');
-  };
-
-  private getUserEvents = (req: express.Request, res: express.Response) => {
-    console.log(req.params);
-    res.send('AuthUser login');
   };
 }
 
