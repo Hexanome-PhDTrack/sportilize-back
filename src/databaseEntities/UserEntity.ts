@@ -19,8 +19,6 @@ export class UserEntity {
   @Column()
   role: string;
 
-  @ManyToMany(type => EventEntity, event => event.participants, {
-    eager: true,
-  })
+  @ManyToMany(type => EventEntity, event => event.participants, {})
   participatesToEvents: EventEntity[];
 }

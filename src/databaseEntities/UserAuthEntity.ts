@@ -16,8 +16,6 @@ export class UserAuthEntity extends UserEntity {
   @Column()
   password: string;
 
-  @OneToMany(() => EventEntity, event => event.creator, {
-    eager: true,
-  })
+  @OneToMany(() => EventEntity, event => event.creator, {})
   eventsCreated: EventEntity[];
 }

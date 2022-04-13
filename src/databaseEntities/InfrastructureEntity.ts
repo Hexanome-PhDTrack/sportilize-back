@@ -25,10 +25,9 @@ export class InfrastructureEntity {
 
   @Index({ spatial: true })
   @Column({
-    type: 'geography',
+    type: 'point',
     spatialFeatureType: 'Point',
     srid: 4326,
-    nullable: true,
   })
   coordinates: Point;
 
@@ -41,9 +40,7 @@ export class InfrastructureEntity {
   @Column()
   address: string;
 
-  @OneToMany(() => EventEntity, event => event.infrastructure, {
-    eager: true,
-  })
+  @OneToMany(() => EventEntity, event => event.infrastructure, {})
   eventsRelated: EventEntity[];
 
   @Column()
