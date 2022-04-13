@@ -1,14 +1,22 @@
 import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
 
+@Entity()
 export class InfrastructureEntity {
   @PrimaryGeneratedColumn()
-  coordinates: number[];
+  id: number;
 
+  // @PrimaryGeneratedColumn()
+  // coordinates: number[];
+
+  @Column()
   creator: string;
 
+  @Column()
   name: string;
 
+  @Column()
   address: string;
 
-  occupiedHours: number[];
+  // @Column()
+  // occupiedHours: number[];
 }

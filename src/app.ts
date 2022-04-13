@@ -4,6 +4,7 @@ import Controller from './interfaces/controller.interface';
 import loggerMiddleware from './middlewares/logger.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import dotenv from 'dotenv';
+import { AppDataSource } from './data-source';
 dotenv.config();
 
 // https://github.com/mwanago/express-typescript/blob/master/src/app.ts
@@ -14,7 +15,7 @@ class App {
   constructor(controllers: Controller[]) {
     this.app = express();
 
-    // this.connectToDb();
+    this.connectToDb();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling(); // this needs to be last in the app stack.
@@ -41,15 +42,15 @@ class App {
     });
   }
 
-  //Not sure this is useful
-  // private async connectToDb(){
-  //   //TODO
-  //   try {
-  //     this.dbConnection = await AppDataSource.initialize()
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  // Not sure this is useful
+  private async connectToDb() {
+    //TODO
+    try {
+      await AppDataSource.initialize();
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 export default App;

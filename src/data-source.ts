@@ -3,6 +3,8 @@ import { UserAuthEntity } from './databaseEntities/UserAuthEntity';
 import { EventEntity } from './databaseEntities/EventEntity';
 import dotenv from 'dotenv';
 import 'reflect-metadata';
+import { UserEntity } from './databaseEntities/UserEntity';
+import { InfrastructureEntity } from './databaseEntities/InfrastructureEntity';
 
 dotenv.config();
 
@@ -15,17 +17,23 @@ export const AppDataSource = new DataSource({
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  synchronize: true,
+  synchronize: true, //TODO don't forget this on prod
   logging: true,
-  entities: [UserAuthEntity, EventEntity],
+  entities: [UserEntity, UserAuthEntity, EventEntity, InfrastructureEntity],
   subscribers: [],
   migrations: [],
 });
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch(err => {
-    console.error('Error during Data Source initialization', err);
-  });
+// AppDataSource.initialize()
+//   .then(async () => {
+//     console.log('Data Source has been initialized!');
+//     // const user = new UserEntity();
+//     // user.username = "pldtest1"
+//     // user.role = "unauthenticated"
+//     // console.log("test");
+//     // await AppDataSource.manager.save(user)
+//     // console.log("Photo has been saved. Photo id is", user.id)
+//   })
+//   .catch(err => {
+//     console.error('Error during Data Source initialization', err);
+//   });
