@@ -10,13 +10,9 @@ export class SportEntity {
   @Column()
   name: string;
 
-  @ManyToMany(type => EventEntity, event => event.sports, {})
+  @ManyToMany('EventEntity', 'sportEntity', {})
   EventRelated: EventEntity[];
 
-  @ManyToMany(
-    type => InfrastructureEntity,
-    infrastructure => infrastructure.sports,
-    {},
-  )
+  @ManyToMany('InfrastructureEntity', 'sportEntity', {})
   infrastructuresRelated: InfrastructureEntity[];
 }

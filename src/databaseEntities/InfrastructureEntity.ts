@@ -17,7 +17,7 @@ export class InfrastructureEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(type => SportEntity, sport => sport.infrastructuresRelated, {
+  @ManyToMany('SportEntity', 'infrastructure', {
     eager: true,
   })
   @JoinTable()
@@ -40,7 +40,7 @@ export class InfrastructureEntity {
   @Column()
   address: string;
 
-  @OneToMany(() => EventEntity, event => event.infrastructure, {})
+  @OneToMany('EventEntity', 'infrastructureEntity')
   eventsRelated: EventEntity[];
 
   @Column()

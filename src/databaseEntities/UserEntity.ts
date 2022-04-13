@@ -14,11 +14,14 @@ export class UserEntity {
   id: number;
 
   @Column()
+  guid: string;
+
+  @Column()
   username: string;
 
   @Column()
   role: string;
 
-  @ManyToMany(type => EventEntity, event => event.participants, {})
+  @ManyToMany('EventEntity', 'userEntity', {})
   participatesToEvents: EventEntity[];
 }

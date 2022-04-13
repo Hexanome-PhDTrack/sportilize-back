@@ -1,14 +1,14 @@
 import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { TestUtils } from './TestUtils';
 
-beforeEach(async () => {
-  const testUtils = new TestUtils();
-  await testUtils.connectToDb();
-  const { dbConnection } = testUtils;
-  await dbConnection.manager.clear(UserEntity);
-});
+// beforeEach(async () => {
+//   const testUtils = new TestUtils();
+//   await testUtils.connectToDb();
+//   const { dbConnection } = testUtils;
+//   await dbConnection.manager.clear(UserEntity);
+// });
 
-describe('UserTable', async () => {
+test('UserTable', async () => {
   const user = new UserEntity();
   const testUtils = new TestUtils();
   await testUtils.connectToDb();

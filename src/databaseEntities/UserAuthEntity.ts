@@ -10,12 +10,12 @@ import { EventEntity } from './EventEntity';
 
 @Entity()
 export class UserAuthEntity extends UserEntity {
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
 
-  @OneToMany(() => EventEntity, event => event.creator, {})
+  @OneToMany('EventEntity', 'userAuthEntity', {})
   eventsCreated: EventEntity[];
 }

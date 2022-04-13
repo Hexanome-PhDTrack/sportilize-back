@@ -17,17 +17,17 @@ export class EventEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => InfrastructureEntity, infra => infra.eventsRelated, {
+  @ManyToOne('InfrastructureEntity', 'eventEntity', {
     eager: true,
   })
   infrastructure: InfrastructureEntity;
 
-  @ManyToOne(() => UserAuthEntity, user => user.eventsCreated, {
+  @ManyToOne('UserAuthEntity', 'eventEntity', {
     eager: true,
   })
   creator: UserAuthEntity;
 
-  @ManyToMany(type => UserEntity, user => user.participatesToEvents, {
+  @ManyToMany('UserEntity', 'eventEntity', {
     eager: true,
   })
   @JoinTable()
@@ -36,7 +36,7 @@ export class EventEntity {
   @Column()
   nbMaxParticipants: number;
 
-  @ManyToMany(type => SportEntity, sport => sport.EventRelated, {
+  @ManyToMany('SportEntity', 'eventEntity', {
     eager: true,
   })
   @JoinTable()
