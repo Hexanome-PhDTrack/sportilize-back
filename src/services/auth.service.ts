@@ -21,6 +21,14 @@ export class AuthenticationService {
     this.userAuthRepo = this.dbConnection.getRepository(UserAuthEntity);
   }
 
+  public async getUser(uuid: string): Promise<UserAuthEntity> {
+    const user: UserAuthEntity = await this.userAuthRepo.findOne({
+      where: { uuid: uuid },
+    });
+
+    return user;
+  }
+
   public async register(userData: UserAuthEntity) {
     //Can't register 2 users with the same email
     if (

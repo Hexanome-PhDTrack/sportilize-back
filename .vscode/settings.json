@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "spryrr1myu6oalwl.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+            "port": 3306,
+            "driver": "MariaDB",
+            "username": "v735n3cyopd0zwwq",
+            "password": "nnzrjd2dg8p0dic9",
+            "database": "py9uezatfy2ahnar",
+            "name": "jaws spryr"
+        }
+    ]
+}
