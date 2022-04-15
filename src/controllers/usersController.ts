@@ -23,9 +23,6 @@ class UsersController implements Controller {
     this.router.post(`${this.path}/new_user`, this.newUserNotAuth);
     this.router.get(`${this.path}/info`, this.userInfo);
 
-    //Auth users
-    this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
-
     //Events interactions
     this.router.put(`${this.path}/join_event`, this.joinEvent);
     this.router.get(`${this.path}/user_events`, this.getUserEvents);
@@ -66,7 +63,7 @@ class UsersController implements Controller {
     res: express.Response,
     next: NextFunction,
   ) => {
-    const userData: UserAuthEntity = req.body;
+    const userData: UserEntity = req.body;
     try {
       const editedUser = await this.usersService.edit(userData);
       res.status(204).send(editedUser);

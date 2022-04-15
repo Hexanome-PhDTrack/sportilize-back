@@ -5,6 +5,7 @@ import LoginDto from '../../src/databaseEntities/LoginDto';
 import { v4 as uuidv4 } from 'uuid';
 
 const BASE_URL = 'https://sportilize.herokuapp.com/api';
+
 const API_VESRION = 'v1';
 var cookie;
 
@@ -12,40 +13,10 @@ describe('User Auth API endpoint test', () => {
   const endpoint = 'users_auth';
 
   describe('User API unauthenticated tests', () => {
-    it('should create an unauthenticated user', async () => {
-      const resource = 'new_user';
-      const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
-      const uuid = uuidv4();
-      const newUser = {
-        uuid: uuid,
-        username: 'test' + uuid,
-      };
-      const options: RequestInit = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
-      };
-
-      const response = await fetch(url, options);
-      let jsonRes;
-      try {
-        jsonRes = await response.json();
-      } catch (e) {
-        console.log(e);
-      }
-      expect(response.status).toBe(201);
-      expect(jsonRes).toEqual({
-        uuid: uuid,
-        username: 'test' + uuid,
-        role: '',
-      });
-    });
     it('should return user information', async () => {
       const resource = 'info';
       const queryParams = {
-        uuid: 'existingUser',
+        email: 'test@mail.com',
       };
       const params = new URLSearchParams(queryParams);
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}?${params}`;
@@ -56,7 +27,6 @@ describe('User Auth API endpoint test', () => {
           'Content-Type': 'application/json',
         },
       };
-
       const response = await fetch(url, options);
       let jsonRes;
       try {
@@ -105,26 +75,52 @@ describe('User Auth API endpoint test', () => {
       expect(cookie.split('Max-Age=')[1]).toBe('3600');
     });
 
-    it('should authorize an authenticated request', async () => {
+    it('should edit user info', async () => {
       console.log(cookie);
-      const resource = 'user_events';
+      const resource = 'edit';
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
+      const editedData = {
+        uuid: 'existingUser',
+        username: 'jestTestRegisterEdited',
+        email: 'test@mail.com',
+        role: 'member',
+      };
       const options: RequestInit = {
-        method: 'GET',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Cookie: cookie,
         },
+        body: JSON.stringify(editedData),
       };
 
       const response = await fetch(url, options);
-      let jsonRes;
-      try {
-        jsonRes = await response.json();
-      } catch (e) {
-        console.log(e);
-      }
+      expect(response.status).toBe(204);
+    });
+
+    it('should discard user edits', async () => {
+      console.log(cookie);
+      const resource = 'edit';
+      const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
+
+      const editedData = {
+        uuid: 'existingUser',
+        username: 'jestTestRegister',
+        email: 'test@mail.com',
+        role: 'member',
+      };
+      const options: RequestInit = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookie,
+        },
+        body: JSON.stringify(editedData),
+      };
+
+      const response = await fetch(url, options);
+      expect(response.status).toBe(204);
     });
   });
 });

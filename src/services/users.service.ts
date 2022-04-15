@@ -15,12 +15,10 @@ import { UserEntity } from '../databaseEntities/UserEntity';
 
 class UsersService {
   public dbConnection: DataSource;
-  public usersAuthRepo: Repository<UserAuthEntity>;
   public usersRepo: Repository<UserEntity>;
 
   constructor() {
     this.dbConnection = AppDataSource;
-    this.usersAuthRepo = this.dbConnection.getRepository(UserAuthEntity);
     this.usersRepo = this.dbConnection.getRepository(UserEntity);
   }
 
@@ -42,7 +40,7 @@ class UsersService {
   };
 
   public async userInfo(uuid: string) {
-    const user = await this.usersAuthRepo.findOne({
+    const user = await this.usersRepo.findOne({
       where: { uuid: uuid },
     });
     if (!user) {
@@ -52,58 +50,29 @@ class UsersService {
     if (errors.length > 0) {
       throw new HttpException(400, JSON.stringify(errors));
     }
-    delete user.password;
     delete user.id;
     return user;
   }
 
-  public async edit(userData: UserAuthEntity) {
-    const existingUser = await this.usersAuthRepo.findOne({
-      where: { email: userData.email },
+  public async edit(userData: UserEntity) {
+    const existingUser = await this.usersRepo.findOne({
+      where: { uuid: userData.uuid },
     });
     if (!existingUser) {
-      throw new UserNotFoundException(userData.email);
+      throw new UserNotFoundException(userData.uuid);
     }
+    userData.role = '';
     const errors = await validate(userData);
     if (errors.length > 0) {
       throw new HttpException(400, JSON.stringify(errors));
     }
-    const editedUser = await this.usersAuthRepo.save(userData);
+    const editedUser = await this.usersRepo.save(userData);
     delete editedUser.id;
-    delete editedUser.password;
     return editedUser;
   }
 
   public async logout() {
     return 'Authorization=;Max-age=0';
-  }
-
-  public async changePassword(email, oldPassword: string, newPassword: string) {
-    //Get usersAuthRepo from the database
-    let user: UserAuthEntity;
-    try {
-      user = await this.usersAuthRepo.findOneOrFail({
-        where: { email: email },
-      });
-    } catch (err) {
-      console.log(err);
-    }
-
-    if (!(user.password === oldPassword)) throw new WrongCredentialsException();
-
-    //Validate the model (password length)
-    user.password = newPassword;
-    const errors = await validate(user);
-    if (errors.length > 0) {
-      throw new HttpException(400, JSON.stringify(errors));
-    }
-
-    //save
-    try {
-      await this.usersAuthRepo.save(user);
-    } catch (e) {
-      console.log(e);
-    }
   }
 }
 

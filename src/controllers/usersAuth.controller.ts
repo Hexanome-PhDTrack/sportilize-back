@@ -8,7 +8,7 @@ import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import { UserEntity } from '../databaseEntities/UserEntity';
 import UsersAuthService from '../services/usersAuth.service';
 
-class AuthUsersController implements Controller {
+class UsersAuthController implements Controller {
   public path = '/users_auth';
   public router = express.Router();
   public usersAuthService = new UsersAuthService();
@@ -24,8 +24,8 @@ class AuthUsersController implements Controller {
     this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
 
     //Events interactions
-    this.router.put(`${this.path}/join_event`, this.joinEvent);
-    this.router.get(`${this.path}/user_events`, this.getUserEvents);
+    this.router.put(`${this.path}/join_event`, checkJwt, this.joinEvent);
+    this.router.get(`${this.path}/user_events`, checkJwt, this.getUserEvents);
   }
 
   //User management
@@ -36,7 +36,7 @@ class AuthUsersController implements Controller {
   ) => {
     const email = req.query.email;
     try {
-      const user = await this.usersAuthService.userInfo(email);
+      const user = await this.usersAuthService.userInfo(email.toString());
       res.send(user);
     } catch (e) {
       next(e);
@@ -50,8 +50,9 @@ class AuthUsersController implements Controller {
   ) => {
     const userData: UserAuthEntity = req.body;
     try {
-      const editedUser = await this.usersAuthService.edit(userData);
-      res.status(204).send(editedUser);
+      await this.usersAuthService.edit(userData);
+      //PUT REQUEST DON'T SEND A BODY
+      res.status(204);
     } catch (e) {
       next(e);
     }
@@ -69,4 +70,4 @@ class AuthUsersController implements Controller {
   };
 }
 
-export default AuthUsersController;
+export default UsersAuthController;
