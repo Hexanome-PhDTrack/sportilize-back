@@ -8,7 +8,7 @@ import express from 'express';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import UserExistsException from '../exceptions/UserExistsException';
-import LoginDto from '../databaseEntities/LoginDto';
+import LoginDto from '../dataTransfertObject/LoginDto';
 import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
 

@@ -3,7 +3,7 @@ import Controller from '../interfaces/controller.interface';
 import * as express from 'express';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import AuthenticationService from '../services/auth.service';
-import loginDto from '../databaseEntities/LoginDto';
+import loginDto from '../dataTransfertObject/LoginDto';
 
 //cf
 //https://github.com/andregardi/jwt-express-typeorm
