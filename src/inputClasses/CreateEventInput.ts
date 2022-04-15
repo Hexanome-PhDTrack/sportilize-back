@@ -1,6 +1,6 @@
 import { IsArray, IsDateString, IsInt, IsString } from 'class-validator';
 
-class EventInput {
+class CreateEventInput {
   @IsInt()
   public infrastructureId: number;
 
@@ -20,4 +20,4 @@ class EventInput {
   public endDate: string;
 }
 
-export default EventInput;
+export default CreateEventInput;

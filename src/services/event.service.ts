@@ -21,6 +21,19 @@ class EventsService {
     const event = await this.eventRepo.save(eventData);
     return event;
   }
+
+  public async getEvent(id: number): Promise<EventEntity> {
+    const event: EventEntity = await this.eventRepo.findOne({
+      where: { id: id },
+    });
+
+    return event;
+  }
+
+  public async updateEvent(eventData: EventEntity) {
+    const event = await this.eventRepo.save(eventData);
+    return event;
+  }
 }
 
 export default EventsService;
