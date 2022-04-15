@@ -14,7 +14,7 @@ export class UserEntity {
   id?: number;
 
   @Column()
-  guid: string;
+  uuid: string;
 
   @Column()
   username: string;
