@@ -13,7 +13,7 @@ import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
 import { UserEntity } from '../databaseEntities/UserEntity';
 
-class UsersService {
+class UsersAuthService {
   public dbConnection: DataSource;
   public usersAuthRepo: Repository<UserAuthEntity>;
   public usersRepo: Repository<UserEntity>;
@@ -21,32 +21,14 @@ class UsersService {
   constructor() {
     this.dbConnection = AppDataSource;
     this.usersAuthRepo = this.dbConnection.getRepository(UserAuthEntity);
-    this.usersRepo = this.dbConnection.getRepository(UserEntity);
   }
 
-  public newUserNotAuth = async (userData: UserEntity) => {
-    const userInDb = await this.usersRepo.findOne({
-      where: { uuid: userData.uuid },
-    });
-    if (userInDb) {
-      throw new UserExistsException(userData.uuid);
-    }
-    userData.role = '';
-    const errors = await validate(userData);
-    if (errors.length > 0) {
-      throw new HttpException(400, JSON.stringify(errors));
-    }
-    await this.usersRepo.save(userData);
-    delete userData.id;
-    return userData;
-  };
-
-  public async userInfo(uuid: string) {
+  public async userInfo(email: string) {
     const user = await this.usersAuthRepo.findOne({
-      where: { uuid: uuid },
+      where: { email: email },
     });
     if (!user) {
-      throw new UserNotFoundException(uuid);
+      throw new UserNotFoundException(email);
     }
     const errors = await validate(user);
     if (errors.length > 0) {
@@ -68,10 +50,10 @@ class UsersService {
     if (errors.length > 0) {
       throw new HttpException(400, JSON.stringify(errors));
     }
-    const editedUser = await this.usersAuthRepo.save(userData);
-    delete editedUser.id;
-    delete editedUser.password;
-    return editedUser;
+    await this.usersAuthRepo.save({
+      ...existingUser,
+      ...userData,
+    });
   }
 
   public async logout() {
@@ -107,4 +89,4 @@ class UsersService {
   }
 }
 
-export default UsersService;
+export default UsersAuthService;
