@@ -107,3 +107,14 @@ for (let i = 0; i < data.usernames.length; i++) {
   user.role = data.roles[i];
   users.push(user);
 }
+
+// save users to the database
+populate.dbConnection.getRepository(UserEntity).save(users);
+
+// make a request to the database to see if the data is there
+populate.dbConnection
+  .getRepository(UserEntity)
+  .find()
+  .then(users => {
+    console.log(users);
+  });
