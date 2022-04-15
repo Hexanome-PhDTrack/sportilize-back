@@ -14,3 +14,9 @@ yarn.lock
 
 #compiled
 dist/
+
+# SQLTools
+./*.sql
+.log
+.vscode/settings.json
+
