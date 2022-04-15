@@ -1,10 +1,16 @@
 import * as express from 'express';
 import Controller from '../interfaces/controller.interface';
 import { checkJwt } from '../middlewares/checkJwt';
+import { NextFunction } from 'express';
+import AuthenticationService from '../services/auth.service';
+import UsersService from '../services/usersService';
+import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
+import { UserEntity } from '../databaseEntities/UserEntity';
 
 class UsersController implements Controller {
   public path = '/users';
   public router = express.Router();
+  public usersService = new UsersService();
 
   constructor() {
     this.initializeRoutes();
@@ -12,16 +18,61 @@ class UsersController implements Controller {
 
   public initializeRoutes() {
     //User management
-    this.router.put(`${this.path}/edit`, this.editUser);
+
+    //Unauth user
+    this.router.post(`${this.path}/new_user`, this.newUserNotAuth);
+
+    //Auth users
+    this.router.get(`${this.path}/info`, this.userInfo);
+    this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
 
     //Events interactions
     this.router.put(`${this.path}/join_event`, this.joinEvent);
-    this.router.get(`${this.path}/user_events`, checkJwt, this.getUserEvents);
+    this.router.get(`${this.path}/user_events`, this.getUserEvents);
   }
 
   //User management
-  public editUser = (req: express.Request, res: express.Response) => {
-    res.send('AuthUser login');
+
+  public newUserNotAuth = async (
+    req: express.Request,
+    res: express.Response,
+    next: NextFunction,
+  ) => {
+    const userData: UserEntity = req.body;
+    try {
+      const user = await this.usersService.newUserNotAuth(userData);
+      res.status(201).send(user);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public userInfo = async (
+    req: express.Request,
+    res: express.Response,
+    next: NextFunction,
+  ) => {
+    const uuid = req.query.uuid;
+    try {
+      const user = await this.usersService.userInfo(uuid.toString());
+      res.send(user);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public editUser = async (
+    req: express.Request,
+    res: express.Response,
+    next: NextFunction,
+  ) => {
+    const userData: UserAuthEntity = req.body;
+    try {
+      const editedUser = await this.usersService.edit(userData);
+      res.status(204).send(editedUser);
+    } catch (e) {
+      next(e);
+    }
   };
 
   //Events interactions//
