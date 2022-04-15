@@ -8,8 +8,8 @@ const BASE_URL = 'https://sportilize.herokuapp.com/api';
 const API_VESRION = 'v1';
 var cookie;
 
-describe('User API endpoint test', () => {
-  const endpoint = 'users';
+describe('User Auth API endpoint test', () => {
+  const endpoint = 'users_auth';
 
   describe('User API unauthenticated tests', () => {
     it('should create an unauthenticated user', async () => {

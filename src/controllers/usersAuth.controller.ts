@@ -6,11 +6,12 @@ import AuthenticationService from '../services/auth.service';
 import UsersService from '../services/users.service';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import { UserEntity } from '../databaseEntities/UserEntity';
+import UsersAuthService from '../services/usersAuth.service';
 
-class UsersController implements Controller {
-  public path = '/users';
+class AuthUsersController implements Controller {
+  public path = '/users_auth';
   public router = express.Router();
-  public usersService = new UsersService();
+  public usersAuthService = new UsersAuthService();
 
   constructor() {
     this.initializeRoutes();
@@ -19,11 +20,7 @@ class UsersController implements Controller {
   public initializeRoutes() {
     //User management
 
-    //Unauth user
-    this.router.post(`${this.path}/new_user`, this.newUserNotAuth);
     this.router.get(`${this.path}/info`, this.userInfo);
-
-    //Auth users
     this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
 
     //Events interactions
@@ -32,29 +29,14 @@ class UsersController implements Controller {
   }
 
   //User management
-
-  public newUserNotAuth = async (
-    req: express.Request,
-    res: express.Response,
-    next: NextFunction,
-  ) => {
-    const userData: UserEntity = req.body;
-    try {
-      const user = await this.usersService.newUserNotAuth(userData);
-      res.status(201).send(user);
-    } catch (e) {
-      next(e);
-    }
-  };
-
   public userInfo = async (
     req: express.Request,
     res: express.Response,
     next: NextFunction,
   ) => {
-    const uuid = req.query.uuid;
+    const email = req.query.email;
     try {
-      const user = await this.usersService.userInfo(uuid.toString());
+      const user = await this.usersAuthService.userInfo(email);
       res.send(user);
     } catch (e) {
       next(e);
@@ -68,7 +50,7 @@ class UsersController implements Controller {
   ) => {
     const userData: UserAuthEntity = req.body;
     try {
-      const editedUser = await this.usersService.edit(userData);
+      const editedUser = await this.usersAuthService.edit(userData);
       res.status(204).send(editedUser);
     } catch (e) {
       next(e);
@@ -87,4 +69,4 @@ class UsersController implements Controller {
   };
 }
 
-export default UsersController;
+export default AuthUsersController;
