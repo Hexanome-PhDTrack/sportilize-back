@@ -13,7 +13,7 @@ describe('Auth API endpoint test', () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
     const randomstring = (Math.random() * 1000000).toString();
     const userData: UserAuthEntity = {
-      guid: 'existingUser',
+      uuid: 'existingUser',
       username: 'jestTestRegister',
       password: 'jestTest123',
       email: `test${randomstring}@mail.com`,
@@ -35,7 +35,7 @@ describe('Auth API endpoint test', () => {
     } catch (e) {
       console.log(e);
     }
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
     let cookie = response.headers.get('Set-Cookie');
     expect(cookie.split('Max-Age=')[1]).toBe('3600');
   });
@@ -44,7 +44,7 @@ describe('Auth API endpoint test', () => {
     const resource = 'register';
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
     const userData: UserAuthEntity = {
-      guid: 'existingUser',
+      uuid: 'existingUser',
       username: 'jestTestRegister',
       password: 'jestTest123',
       email: 'test@mail.com',

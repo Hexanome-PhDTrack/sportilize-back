@@ -1,5 +1,7 @@
 interface DataStoredInToken {
-  _id: string;
+  uuid: string;
+  username: string;
+  userRole: string;
 }
 
 export default DataStoredInToken;

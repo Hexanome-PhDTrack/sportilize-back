@@ -31,7 +31,7 @@ class AuthController implements Controller {
         userData,
       );
       res.setHeader('Set-Cookie', [cookie]);
-      res.send(user);
+      res.status(201).send(user);
     } catch (e) {
       next(e);
     }
@@ -47,6 +47,7 @@ class AuthController implements Controller {
       const { cookie, user } = await this.authenticationService.login(
         loginData,
       );
+      console.log(cookie);
       res.setHeader('Set-Cookie', [cookie]);
       res.send(user);
     } catch (e) {
@@ -57,7 +58,7 @@ class AuthController implements Controller {
   public logout = async (req: Request, res: Response) => {
     const cookie = await this.authenticationService.logout();
     res.setHeader('Set-Cookie', [cookie]);
-    res.send(200);
+    res.status(200).send();
   };
 
   public changePassword = async (
