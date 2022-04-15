@@ -4,6 +4,10 @@
 
 [TypeORM doc](https://typeorm.io/)
 
+### API
+
+[API du Grang Lyon](https://data.grandlyon.com/jeux-de-donnees/equipements-sportifs-metropole-lyon-point-interet/api)
+
 ## Install
 
 `npm i yarn -g`: install `yarn` (package manager similar to `npm` but more recent).
