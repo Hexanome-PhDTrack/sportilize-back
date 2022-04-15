@@ -16,7 +16,6 @@ yarn.lock
 dist/
 
 # SQLTools
-./*.sql
-.log
+*.log
 .vscode/settings.json
-
+Jaws spryr.session.sql
