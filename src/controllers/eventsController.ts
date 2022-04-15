@@ -4,7 +4,7 @@ import { AppDataSource } from '../data-source';
 import { EventEntity } from '../databaseEntities/EventEntity';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 
-class eventsController implements Controller {
+class EventsController implements Controller {
   public path = '/events';
   public router = express.Router();
 
@@ -28,23 +28,23 @@ class eventsController implements Controller {
   //Events management//
 
   //We're using arrow functions to access props of an instance of the class.
-  private createEvent = (req: express.Request, res: express.Response) => {
+  public createEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  private editEvent = (req: express.Request, res: express.Response) => {
+  public editEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  private closeEvent = (req: express.Request, res: express.Response) => {
+  public closeEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  private cancelEvent = (req: express.Request, res: express.Response) => {
+  public cancelEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  private getEvent = async (req: express.Request, res: express.Response) => {
+  public getEvent = async (req: express.Request, res: express.Response) => {
     //TODO fix this
     const id = parseInt(req.params.id);
     const event = await AppDataSource.getRepository(EventEntity).findOneOrFail({
@@ -52,13 +52,13 @@ class eventsController implements Controller {
     });
   };
 
-  private listEvents = (req: express.Request, res: express.Response) => {
+  public listEvents = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  private exportEvent = (req: express.Request, res: express.Response) => {
+  public exportEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 }
 
-export default eventsController;
+export default EventsController;

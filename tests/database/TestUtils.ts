@@ -1,13 +1,16 @@
 import * as fs from 'fs';
 import { AppDataSource } from '../../src/data-source';
 import { DataSource } from 'typeorm';
+import { UserEntity } from '../../src/databaseEntities/UserEntity';
+import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
+import { EventEntity } from '../../src/databaseEntities/EventEntity';
+import { InfrastructureEntity } from '../../src/databaseEntities/InfrastructureEntity';
 
 export class TestUtils {
   dbConnection: DataSource;
 
   constructor() {
     this.dbConnection = AppDataSource;
-    this.connectToDb();
   }
 
   async shutdownServer(server) {
@@ -31,6 +34,7 @@ export class TestUtils {
   }
 
   public async dropDb() {
+    const connection = this.dbConnection.isInitialized;
     await this.dbConnection.dropDatabase();
   }
 
@@ -44,15 +48,21 @@ export class TestUtils {
 
   async reloadFixtures() {
     const entities = await this.getEntities();
-    await this.cleanAll(entities);
+    await this.cleanAll();
     await this.loadAll(entities);
   }
 
-  async cleanAll(entities) {
+  async cleanAll() {
+    const entities = [
+      UserEntity,
+      UserAuthEntity,
+      EventEntity,
+      InfrastructureEntity,
+    ];
     try {
       for (const entity of entities) {
-        const repository = await this.dbConnection.getRepository(entity.name);
-        await repository.query(`TRUNCATE TABLE \`${entity.tableName}\`;`);
+        const repository = await this.dbConnection.getRepository(entity);
+        await repository.query(`TRUNCATE TABLE \`${entity}\`;`);
       }
     } catch (error) {
       throw new Error(`ERROR: Cleaning test db: ${error}`);

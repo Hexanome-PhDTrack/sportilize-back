@@ -1,27 +1,55 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  ManyToMany,
+  JoinTable,
+  ManyToOne,
+} from 'typeorm';
+import { UserEntity } from './UserEntity';
+import { SportEntity } from './SportEntity';
+import { UserAuthEntity } from './UserAuthEntity';
+import { InfrastructureEntity } from './InfrastructureEntity';
 
 @Entity()
 export class EventEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  infrastructure: string;
+  @ManyToOne('InfrastructureEntity', 'eventEntity', {
+    eager: true,
+  })
+  infrastructure: InfrastructureEntity;
+
+  @ManyToOne('UserAuthEntity', 'eventEntity', {
+    eager: true,
+  })
+  creator: UserAuthEntity;
+
+  @ManyToMany('UserEntity', 'eventEntity', {
+    eager: true,
+  })
+  @JoinTable()
+  participants: UserEntity[];
 
   @Column()
-  creator: string;
+  nbMaxParticipants: number;
 
-  // @Column()
-  // participants: string[];
-
-  // @Column()
-  // sports: string[];
+  @ManyToMany('SportEntity', 'eventEntity', {
+    eager: true,
+  })
+  @JoinTable()
+  sports: SportEntity[];
 
   @Column()
   description: string;
 
-  @Column()
-  beginDate: string;
+  @Column({ type: 'timestamp', nullable: true })
+  beginDate: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  endDate: Date;
 
   @Column()
   closed: boolean;
