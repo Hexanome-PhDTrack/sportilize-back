@@ -11,7 +11,7 @@ import { EventEntity } from './EventEntity';
 @Entity()
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   guid: string;
@@ -23,5 +23,5 @@ export class UserEntity {
   role: string;
 
   @ManyToMany('EventEntity', 'userEntity', {})
-  participatesToEvents: EventEntity[];
+  participatesToEvents?: EventEntity[];
 }

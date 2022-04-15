@@ -10,16 +10,13 @@ const test = async () => {
   const insertUserTest = async () => {
     user.username = 'pldtest1';
     user.role = 'unauthenticated';
-    console.log('test');
     await dbConnection.manager.save(user);
-    console.log('Photo has been saved. user id is', user.id);
   };
 
   const findUserTest = async () => {
     const user1 = await dbConnection
       .getRepository(UserEntity)
       .findOneOrFail({ where: { username: 'pldtest1' } });
-    console.log(user1);
     return user1;
   };
 

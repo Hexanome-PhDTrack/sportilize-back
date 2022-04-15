@@ -1,10 +1,19 @@
 import App from './app';
-import usersController from './controllers/users.controller';
-import eventsController from './controllers/events.controller';
+import UsersController from './controllers/usersController';
+import EventsController from './controllers/eventsController';
 import validateEnv from './utils/validateEnv';
+import AuthController from './controllers/auth.controller';
 
 validateEnv();
 
-const app = new App([new usersController(), new eventsController()]);
+async function main() {
+  const app = new App([
+    new AuthController(),
+    new UsersController(),
+    new EventsController(),
+  ]);
+  await app.connectToDb();
+  app.listen();
+}
 
-app.listen();
+main();

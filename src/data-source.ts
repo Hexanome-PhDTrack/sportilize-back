@@ -30,17 +30,3 @@ export const AppDataSource = new DataSource({
   subscribers: [],
   migrations: [],
 });
-
-// AppDataSource.initialize()
-//   .then(async () => {
-//     console.log('Data Source has been initialized!');
-//     // const user = new UserEntity();
-//     // user.username = "pldtest1"
-//     // user.role = "unauthenticated"
-//     // console.log("test");
-//     // await AppDataSource.manager.save(user)
-//     // console.log("Photo has been saved. Photo id is", user.id)
-//   })
-//   .catch(err => {
-//     console.error('Error during Data Source initialization', err);
-//   });

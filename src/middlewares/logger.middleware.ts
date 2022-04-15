@@ -6,6 +6,7 @@ const loggerMiddleware = (
   next: NextFunction,
 ) => {
   console.log(`${request.method} ${request.path}`);
+  console.log(request.body);
   next();
 };
 
