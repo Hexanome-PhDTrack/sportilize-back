@@ -1,11 +1,13 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
 import loggerMiddleware from './middlewares/logger.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import dotenv from 'dotenv';
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
+import { checkJwt } from './middlewares/checkJwt';
 dotenv.config();
 
 // https://github.com/mwanago/express-typescript/blob/master/src/app.ts
@@ -26,6 +28,7 @@ class App {
     this.app.use(bodyParser.json());
     //log requests
     this.app.use(loggerMiddleware);
+    this.app.use(cookieParser());
   }
 
   private initializeErrorHandling() {

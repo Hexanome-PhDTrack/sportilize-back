@@ -108,7 +108,9 @@ class AuthenticationService {
     const expiresIn = 60 * 60; // an hour
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
-      _id: user.id.toString(),
+      uuid: user.uuid,
+      username: user.username,
+      userRole: user.role,
     };
     return {
       expiresIn,

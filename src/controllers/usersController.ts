@@ -1,5 +1,6 @@
 import * as express from 'express';
 import Controller from '../interfaces/controller.interface';
+import { checkJwt } from '../middlewares/checkJwt';
 
 class UsersController implements Controller {
   public path = '/users';
@@ -15,7 +16,7 @@ class UsersController implements Controller {
 
     //Events interactions
     this.router.put(`${this.path}/join_event`, this.joinEvent);
-    this.router.get(`${this.path}/user_events`, this.getUserEvents);
+    this.router.get(`${this.path}/user_events`, checkJwt, this.getUserEvents);
   }
 
   //User management
