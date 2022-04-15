@@ -28,9 +28,7 @@ class EventsController implements Controller {
   //Events management//
 
   //We're using arrow functions to access props of an instance of the class.
-  public createEvent = (req: express.Request, res: express.Response) => {
-    res.send('Hello World!');
-  };
+  public createEvent = (req: express.Request, res: express.Response) => {};
 
   public editEvent = (req: express.Request, res: express.Response) => {
     res.send('Hello World!');

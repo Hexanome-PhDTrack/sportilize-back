@@ -1,7 +1,7 @@
 import fetch, { RequestInit } from 'node-fetch-commonjs';
 import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
-import LoginDto from '../../src/databaseEntities/LoginDto';
+import LoginDto from '../../src/dataTransfertObject/LoginDto';
 
 const BASE_URL = 'https://sportilize.herokuapp.com/api';
 const API_VESRION = 'v1';
