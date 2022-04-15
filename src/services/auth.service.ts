@@ -12,7 +12,7 @@ import LoginDto from '../databaseEntities/LoginDto';
 import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
 
-class AuthenticationService {
+export class AuthenticationService {
   public dbConnection: DataSource;
   public userAuthRepo: Repository<UserAuthEntity>;
 
