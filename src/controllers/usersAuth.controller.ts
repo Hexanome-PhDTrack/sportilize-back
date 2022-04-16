@@ -6,11 +6,12 @@ import AuthenticationService from '../services/auth.service';
 import UsersService from '../services/users.service';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import { UserEntity } from '../databaseEntities/UserEntity';
+import UsersAuthService from '../services/usersAuth.service';
 
-class UsersController implements Controller {
-  public path = '/users';
+class UsersAuthController implements Controller {
+  public path = '/users_auth';
   public router = express.Router();
-  public usersService = new UsersService();
+  public usersAuthService = new UsersAuthService();
 
   constructor() {
     this.initializeRoutes();
@@ -19,39 +20,23 @@ class UsersController implements Controller {
   public initializeRoutes() {
     //User management
 
-    //Unauth user
-    this.router.post(`${this.path}/new_user`, this.newUserNotAuth);
     this.router.get(`${this.path}/info`, this.userInfo);
+    this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
 
     //Events interactions
-    this.router.put(`${this.path}/join_event`, this.joinEvent);
-    this.router.get(`${this.path}/user_events`, this.getUserEvents);
+    this.router.put(`${this.path}/join_event`, checkJwt, this.joinEvent);
+    this.router.get(`${this.path}/user_events`, checkJwt, this.getUserEvents);
   }
 
   //User management
-
-  public newUserNotAuth = async (
-    req: express.Request,
-    res: express.Response,
-    next: NextFunction,
-  ) => {
-    const userData: UserEntity = req.body;
-    try {
-      const user = await this.usersService.newUserNotAuth(userData);
-      res.status(201).send(user);
-    } catch (e) {
-      next(e);
-    }
-  };
-
   public userInfo = async (
     req: express.Request,
     res: express.Response,
     next: NextFunction,
   ) => {
-    const uuid = req.query.uuid;
+    const email = req.query.email;
     try {
-      const user = await this.usersService.userInfo(uuid.toString());
+      const user = await this.usersAuthService.userInfo(email.toString());
       res.send(user);
     } catch (e) {
       next(e);
@@ -63,10 +48,11 @@ class UsersController implements Controller {
     res: express.Response,
     next: NextFunction,
   ) => {
-    const userData: UserEntity = req.body;
+    const userData: UserAuthEntity = req.body;
     try {
-      const editedUser = await this.usersService.edit(userData);
-      res.status(204).send(editedUser);
+      await this.usersAuthService.edit(userData);
+      //PUT REQUEST DON'T SEND A BODY
+      res.status(204);
     } catch (e) {
       next(e);
     }
@@ -84,4 +70,4 @@ class UsersController implements Controller {
   };
 }
 
-export default UsersController;
+export default UsersAuthController;

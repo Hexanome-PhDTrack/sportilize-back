@@ -44,7 +44,7 @@ class AuthenticationService {
   }
 
   public async login(loginData: LoginDto) {
-    //Get userAuthRepo from database
+    //Get usersAuthRepo from database
     let user: UserAuthEntity;
     try {
       user = await this.userAuthRepo.findOneOrFail({
@@ -73,7 +73,7 @@ class AuthenticationService {
   }
 
   public async changePassword(email, oldPassword: string, newPassword: string) {
-    //Get userAuthRepo from the database
+    //Get usersAuthRepo from the database
     let user: UserAuthEntity;
     try {
       user = await this.userAuthRepo.findOneOrFail({
