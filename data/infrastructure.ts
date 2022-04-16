@@ -7,32 +7,14 @@ import { Repository } from 'typeorm';
 import { InfrastructureEntity } from '../src/databaseEntities/InfrastructureEntity';
 import { SportEntity } from '../src/databaseEntities/SportEntity';
 import { AppDataSource } from '../src/data-source';
+import { json } from 'body-parser';
 
 // global variables
 let infrastructureRepository: undefined | Repository<InfrastructureEntity> =
   undefined;
 let sportRepository: undefined | Repository<SportEntity> = undefined;
-
-// get data from Grand Lyon API
-const urlGrandLyonTest: string =
-  'https://download.data.grandlyon.com/ws/grandlyon/adr_voie_lieu.adrequipsportpct/all.json?maxfeatures=100&start=1';
-const urlGrandLyonFull: string =
-  'https://download.data.grandlyon.com/ws/grandlyon/adr_voie_lieu.adrequipsportpct/all.json?maxfeatures=-1&start=1';
-
-async function getGrandLyonData() {
-  try {
-    const response = await fetch(urlGrandLyonFull);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function printGrandLyonData(data) {
-  console.log('### Print Grand Lyon data');
-  console.log(data);
-}
+let allSports: SportEntity[] = [];
+let allInfrastructures: InfrastructureEntity[] = [];
 
 async function loadJSONFile(filePath: string) {
   try {
@@ -47,10 +29,31 @@ function saveJSONFile(filePath: string, data: any) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
-function generateIDFromString(str: string) {
+function generateCryptoIDFromString(str: string): BigInt {
   let idString: string = '0x';
   idString += crypto.createHash('sha1').update(str, 'binary').digest('hex');
-  return Number(idString);
+  return BigInt(idString);
+}
+
+function sumAscii(str: string): number {
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+    // add the ASCII value of the
+    // character at the current position
+    sum += str.charCodeAt(i);
+  }
+  return sum;
+}
+
+function INTmoduloMariaDB(nb: number): number {
+  // MariaDB INT: range is -2147483648 to 2147483647
+  // modulo by 2147483648
+  return nb % 2147483648;
+}
+
+function generateSimpleIDFromString(str: string): number {
+  let id = sumAscii(str);
+  return INTmoduloMariaDB(id);
 }
 
 async function AddNewSport(name: string): Promise<SportEntity> {
@@ -66,12 +69,28 @@ async function AddNewSport(name: string): Promise<SportEntity> {
 
   // create new object
   const sportEntity = new SportEntity();
-  sportEntity.id = generateIDFromString(name);
+  sportEntity.id = generateSimpleIDFromString(name);
   sportEntity.name = name;
 
   // save to database
   sportRepository.save(sportEntity);
   return sportEntity;
+}
+
+function AddNewSportInArray(name: string): SportEntity {
+  // check if sport already exists
+  const sport = allSports.find(item => item.name === name);
+  if (sport) {
+    return sport;
+  }
+
+  // create new object
+  const sportEntity = new SportEntity();
+  sportEntity.id = generateSimpleIDFromString(name);
+  sportEntity.name = name;
+
+  // add sport to array
+  allSports.push(sportEntity);
 }
 
 async function main() {
@@ -96,32 +115,45 @@ async function main() {
   console.log(`Data Sports 2016 data size: ${dataSports2016.length}`);
 
   // select data with matching id
+  let counter = 0;
   for (let i = 0; i < dataGrandLyon.nb_results; i++) {
-    const dataSports2016Item = dataSports2016[i];
+    const dataGrandLyonItem = dataGrandLyon.values[i];
 
     // refine id
-    const id = dataSports2016Item.InsNumeroInstall;
-    const idRefined = id.substring(0, id.indexOf('_'));
-
-    const dataGrandLyonItem = dataGrandLyon.values.find(
-      item => item.idexterne === idRefined,
+    const id = dataGrandLyonItem.idexterne;
+    if (!id) continue;
+    //const idRefined = id.substring(0, id.indexOf('_'));
+    const dataSports2016Item = dataSports2016.find(
+      item => item.InsNumeroInstall + '_' + item.EquipementId === id,
     );
-    if (dataGrandLyonItem) {
+
+    if (dataSports2016Item) {
+      counter++;
       // create new object
       const infrastructure = new InfrastructureEntity();
-      infrastructure.id = dataGrandLyonItem.idexterne;
-      infrastructure.coordinates = new Point(
-        dataSports2016Item.EquGpsX,
-        dataSports2016Item.EquGpsY,
-      );
       infrastructure.creator = 'sportilize';
       infrastructure.name = dataGrandLyonItem.nom;
       infrastructure.occupiedHours = '';
 
+      // id manipulation
+      const idStringConcat: string =
+        dataSports2016Item.InsNumeroInstall + dataSports2016Item.EquipementId;
+      infrastructure.id = INTmoduloMariaDB(parseInt(idStringConcat));
+
+      // new geojson Point
+      const point: Point = {
+        type: 'Point',
+        coordinates: [dataSports2016Item.EquGpsX, dataSports2016Item.EquGpsY],
+      };
+      infrastructure.coordinates = point;
+
       // address
       let address: string = '';
-      if (dataSports2016.InsNoVoie !== '' || dataSports2016.InsNoVoie !== 0) {
-        address += dataSports2016.InsNoVoie + ' ';
+      if (
+        dataSports2016Item.InsNoVoie !== '' ||
+        dataSports2016Item.InsNoVoie !== 0
+      ) {
+        address += dataSports2016Item.InsNoVoie + ' ';
       }
       address += dataSports2016Item.InsLibelleVoie + ', ';
       address += dataSports2016Item.InsCodePostal + ' ';
@@ -130,9 +162,63 @@ async function main() {
 
       // handle sports
       const sports: SportEntity[] = [];
-      const sportsGrandLyon: string = dataGrandLyonItem.ActLib;
-      // TODO: finish sport handling
+      const sportsString: string = dataSports2016Item.ActLib;
+
+      // separate string by ',' or '/', and add to database
+      const sportsArray: string[] = sportsString.split(/[,\/]/);
+      for (let j = 0; j < sportsArray.length; j++) {
+        const sportName = sportsArray[j];
+        if (sportName !== '') {
+          const sport = AddNewSportInArray(sportName);
+          sports.push(sport);
+        }
+      }
+      infrastructure.sports = sports;
+
+      // keep track of added data for stats
+      allInfrastructures.push(infrastructure);
+
+      // log
+      //console.log(JSON.stringify(infrastructure, null, 2), 'utf8');
     }
   }
+
+  // save allSports to database
+  let counterSportsSaved = 0;
+  for (let i = 0; i < allSports.length; i++) {
+    try {
+      await sportRepository.save(allSports[i]);
+      counterSportsSaved++;
+    } catch (error) {
+      if (error.name === 'ER_DUP_ENTRY') {
+        console.log(`${allSports[i].name} already exists in database`);
+      } else {
+        console.log(error);
+      }
+    }
+  }
+  console.log(`+++ ${counterSportsSaved} sports added`);
+
+  // save allInfrastructures to database
+  for (
+    let i = allInfrastructures.length - 1;
+    i < allInfrastructures.length;
+    i++
+  ) {
+    try {
+      await infrastructureRepository.save(allInfrastructures[i]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // log stats
+  console.log(`########## STATS ##########`);
+  console.log(`>>> ${counter} items matched`);
+  console.log(`>>> Infrastructures: ${allInfrastructures.length}`);
+  console.log(`>>> Sports: ${allSports.length}`);
+
+  // exit
+  process.exit(0);
 }
 main();
