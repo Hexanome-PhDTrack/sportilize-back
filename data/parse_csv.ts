@@ -22,6 +22,6 @@ function csv2json(csvFilePath: String, outputJsonFilePath: String) {
 }
 
 csv2json(
-  `${__dirname}/data/Data_sport_2016.csv`,
-  `${__dirname}/data/Data_sport_2016.json`,
+  `${__dirname}/data/Data_sport_2016_utf8.csv`,
+  `${__dirname}/data/Data_sport_2016_utf8.json`,
 );

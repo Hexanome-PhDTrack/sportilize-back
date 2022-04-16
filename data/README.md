@@ -19,3 +19,11 @@
 `ActLib`: the sports
 
 `InsNumeroInstall`: identifier of the infrastructure, to be matched with `idexterne` of the API. WARN: The `idexterne` is sometimes available in 2 parts
+
+## Character encoding
+
+> All info [here](https://www.tecmint.com/convert-files-to-utf-8-encoding-in-linux/).
+
+`file -i input.file`: show character encoding of a file.
+
+`iconv -f ISO-8859-1 -t UTF-8//TRANSLIT input.file -o out.file`: Change encoding from one format to another.

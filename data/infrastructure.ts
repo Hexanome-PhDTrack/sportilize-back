@@ -106,7 +106,7 @@ async function main() {
 
   // get data from Data Sports 2016 (from json file)
   const dataSports2016 = await loadJSONFile(
-    `${__dirname}/data/Data_sport_2016.json`,
+    `${__dirname}/data/Data_sport_2016_utf8.json`,
   );
   //console.log(dataSports2016[0]);
 
@@ -185,7 +185,7 @@ async function main() {
 
   // save allSports to database
   let counterSportsSaved = 0;
-  for (let i = 0; i < allSports.length; i++) {
+  /*for (let i = 0; i < allSports.length; i++) {
     try {
       await sportRepository.save(allSports[i]);
       counterSportsSaved++;
@@ -196,11 +196,11 @@ async function main() {
         console.log(error);
       }
     }
-  }
+  }*/
 
   // save allInfrastructures to database
   let counterInfrastructuresSaved = 0;
-  for (let i = 0; i < allInfrastructures.length; i++) {
+  for (let i = 220; i < allInfrastructures.length; i++) {
     try {
       await infrastructureRepository.save(allInfrastructures[i]);
       counterInfrastructuresSaved++;
