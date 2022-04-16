@@ -3,11 +3,11 @@ import fs from 'fs';
 import { Point } from 'geojson';
 import crypto from 'crypto';
 import { Repository } from 'typeorm';
+import { json } from 'body-parser';
 
 import { InfrastructureEntity } from '../src/databaseEntities/InfrastructureEntity';
 import { SportEntity } from '../src/databaseEntities/SportEntity';
 import { AppDataSource } from '../src/data-source';
-import { json } from 'body-parser';
 
 // global variables
 let infrastructureRepository: undefined | Repository<InfrastructureEntity> =
@@ -145,7 +145,7 @@ async function main() {
         type: 'Point',
         coordinates: [dataSports2016Item.EquGpsX, dataSports2016Item.EquGpsY],
       };
-      infrastructure.coordinates = point;
+      infrastructure.point = JSON.stringify(point);
 
       // address
       let address: string = '';
@@ -197,16 +197,13 @@ async function main() {
       }
     }
   }
-  console.log(`+++ ${counterSportsSaved} sports added`);
 
   // save allInfrastructures to database
-  for (
-    let i = allInfrastructures.length - 1;
-    i < allInfrastructures.length;
-    i++
-  ) {
+  let counterInfrastructuresSaved = 0;
+  for (let i = 0; i < allInfrastructures.length; i++) {
     try {
       await infrastructureRepository.save(allInfrastructures[i]);
+      counterInfrastructuresSaved++;
     } catch (error) {
       console.log(error);
     }
@@ -214,6 +211,8 @@ async function main() {
 
   // log stats
   console.log(`########## STATS ##########`);
+  console.log(`+++ ${counterSportsSaved} sports added`);
+  console.log(`+++ ${counterInfrastructuresSaved} infrastructures added`);
   console.log(`>>> ${counter} items matched`);
   console.log(`>>> Infrastructures: ${allInfrastructures.length}`);
   console.log(`>>> Sports: ${allSports.length}`);
