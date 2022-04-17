@@ -23,13 +23,8 @@ export class InfrastructureEntity {
   @JoinTable()
   sports: SportEntity[];
 
-  @Index({ spatial: true })
-  @Column({
-    type: 'point',
-    spatialFeatureType: 'Point',
-    srid: 4326,
-  })
-  coordinates: Point;
+  @Column()
+  point: string;
 
   @Column()
   creator: string;

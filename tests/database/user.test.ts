@@ -9,7 +9,7 @@ import { util } from 'prettier';
 //   await dbConnection.manager.clear(UserEntity);
 // });
 
-describe('Database test', () => {
+describe.skip('Database test', () => {
   test.skip('tests /users endpoint', async () => {
     const user = new UserEntity();
     const testUtils = new TestUtils();

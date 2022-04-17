@@ -3,17 +3,18 @@ import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import LoginDto from '../../src/databaseEntities/LoginDto';
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = 'https://sportilize.herokuapp.com/api';
 const API_VESRION = 'v1';
 
 describe('Auth API endpoint test', () => {
   const endpoint = 'auth';
+
   it('should register a new user and log him for 1 hour.', async () => {
     const resource = 'register';
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
     const randomstring = (Math.random() * 1000000).toString();
     const userData: UserAuthEntity = {
-      uuid: 'existingUser',
+      uuid: `existingUser${randomstring}`,
       username: 'jestTestRegister',
       password: 'jestTest123',
       email: `test${randomstring}@mail.com`,
