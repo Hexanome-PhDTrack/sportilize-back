@@ -1,8 +1,10 @@
 import { EventEntity } from '../databaseEntities/EventEntity';
-import { DataSource, Repository } from 'typeorm';
+import { ArrayContains, DataSource, Repository } from 'typeorm';
 import { AppDataSource } from '../data-source';
 import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
+import { InfrastructureEntity } from '../databaseEntities/InfrastructureEntity';
+import { Point } from 'geojson';
 
 class EventsService {
   public dbConnection: DataSource;
@@ -25,6 +27,20 @@ class EventsService {
   public async getEvent(id: number): Promise<EventEntity> {
     const event: EventEntity = await this.eventRepo.findOne({
       where: { id: id },
+    });
+
+    return event;
+  }
+
+  public async getEventsByInfra(
+    infrastructure: InfrastructureEntity,
+    closed: boolean,
+  ): Promise<EventEntity> {
+    const event: EventEntity = await this.eventRepo.findOne({
+      where: {
+        infrastructure: infrastructure,
+        closed: closed,
+      },
     });
 
     return event;

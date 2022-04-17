@@ -40,7 +40,11 @@ class EventsController implements Controller {
     this.router.put(`${this.path}/edit`, checkJwt, this.editEvent);
     this.router.put(`${this.path}/close`, this.closeEvent);
     this.router.delete(`${this.path}/cancel`, this.cancelEvent);
-    this.router.get(`${this.path}/list_events`, this.listEvents);
+    this.router.get(
+      `${this.path}/list_events_by_infrastructure`,
+      this.listEventsByInfrastructure,
+    );
+    this.router.get(`${this.path}/list_events_by_area`, this.listEventsByArea);
     this.router.get(`${this.path}/export_event`, this.exportEvent);
     this.router.post(`${this.path}/participate`, this.createEvent);
     //
@@ -152,7 +156,14 @@ class EventsController implements Controller {
     res.status(200).send(event);
   };
 
-  public listEvents = (req: express.Request, res: express.Response) => {
+  public listEventsByArea = (req: express.Request, res: express.Response) => {
+    res.send('Hello World!');
+  };
+
+  public listEventsByInfrastructure = (
+    req: express.Request,
+    res: express.Response,
+  ) => {
     res.send('Hello World!');
   };
 
