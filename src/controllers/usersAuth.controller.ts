@@ -52,7 +52,7 @@ class UsersAuthController implements Controller {
     try {
       await this.usersAuthService.edit(userData);
       //PUT REQUEST DON'T SEND A BODY
-      res.status(204);
+      res.status(204).send();
     } catch (e) {
       next(e);
     }

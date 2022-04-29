@@ -4,6 +4,7 @@ import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import LoginDto from '../../src/databaseEntities/LoginDto';
 
 const BASE_URL = 'https://sportilize.herokuapp.com/api';
+// const BASE_URL = "http://localhost:3000/api"
 const API_VESRION = 'v1';
 
 describe('Auth API endpoint test', () => {
@@ -96,6 +97,7 @@ describe('Auth API endpoint test', () => {
     } catch (e) {
       console.log(e);
     }
+    console.log(jsonRes);
     expect(response.status).toBe(200);
     let cookie = response.headers.get('Set-Cookie');
     expect(cookie.split('Max-Age=')[1]).toBe('3600');

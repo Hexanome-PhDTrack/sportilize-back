@@ -35,6 +35,7 @@ export class AuthenticationService {
       throw new HttpException(400, JSON.stringify(errors));
     }
     const user = await this.userAuthRepo.save(userData);
+    delete user['password'];
     const tokenData = this.createToken(user);
     const cookie = this.createCookie(tokenData);
     return {
@@ -58,8 +59,8 @@ export class AuthenticationService {
 
     const isMatchingPassword = loginData.password === user.password;
     if (!isMatchingPassword) throw new WrongCredentialsException();
-
-    //Sing JWT, valid for 1 hour
+    delete user['password'];
+    //Sign JWT, valid for 1 hour
     const tokenData = this.createToken(user);
     const cookie = this.createCookie(tokenData);
     return {

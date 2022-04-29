@@ -5,7 +5,7 @@ import LoginDto from '../../src/databaseEntities/LoginDto';
 import { v4 as uuidv4 } from 'uuid';
 
 const BASE_URL = 'https://sportilize.herokuapp.com/api';
-
+// const BASE_URL = "http://localhost:3000/api"
 const API_VESRION = 'v1';
 var cookie;
 
@@ -76,6 +76,7 @@ describe('User Auth API endpoint test', () => {
     });
 
     it('should edit user info', async () => {
+      jest.setTimeout(10000);
       console.log(cookie);
       const resource = 'edit';
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
@@ -100,6 +101,7 @@ describe('User Auth API endpoint test', () => {
     });
 
     it('should discard user edits', async () => {
+      jest.setTimeout(10000);
       console.log(cookie);
       const resource = 'edit';
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
