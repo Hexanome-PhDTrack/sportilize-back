@@ -4,6 +4,9 @@ class CreateEventInput {
   @IsInt()
   public infrastructureId: number;
 
+  @IsString()
+  public name: string;
+
   @IsInt()
   public nbMaxParticipants: number;
 

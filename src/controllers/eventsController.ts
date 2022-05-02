@@ -89,6 +89,7 @@ class EventsController implements Controller {
       }
       const event: EventEntity = new EventEntity();
       event.infrastructure = infra;
+      event.name = reqParse.name;
       event.creator = creator;
       event.nbMaxParticipants = reqParse.nbMaxParticipants;
       event.sports = sports;

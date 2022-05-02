@@ -16,9 +16,10 @@ describe('event create API endpoint test', () => {
 
     const createEvent: CreateEventInput = {
       infrastructureId: 404133555,
+      name: 'un event de test',
       nbMaxParticipants: 10,
       sports: ['Judo '],
-      description: 'untest',
+      description: 'une description de test',
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
     };
@@ -68,9 +69,10 @@ describe('event create API endpoint test', () => {
     // create event
     const createEvent: CreateEventInput = {
       infrastructureId: 404133555,
+      name: 'un event de test',
       nbMaxParticipants: 10,
-      sports: ['Judo '], //TODO remove whitespace
-      description: "untest d'ajout du judo",
+      sports: ['Judo'],
+      description: 'une description de test',
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
     };

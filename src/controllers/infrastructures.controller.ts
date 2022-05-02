@@ -31,11 +31,11 @@ class InfrastructuresController implements Controller {
     this.router.get(`${this.path}/getByArea`, this.getInfrastructureByArea);
   }
 
-  public async getInfrastructure(
+  public getInfrastructure = async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
-  ) {
+  ) => {
     const reqParse: GetInfrastructureInput = req.body;
     try {
       const errors = await validate(reqParse);
@@ -51,13 +51,13 @@ class InfrastructuresController implements Controller {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
-  public async getInfrastructureByArea(
+  public getInfrastructureByArea = async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
-  ) {
+  ) => {
     const reqParse: GetInfrastructuresbyAreaInput = req.body;
     try {
       const errors = await validate(reqParse);
@@ -78,7 +78,7 @@ class InfrastructuresController implements Controller {
     } catch (e) {
       next(e);
     }
-  }
+  };
 }
 
 export default InfrastructuresController;
