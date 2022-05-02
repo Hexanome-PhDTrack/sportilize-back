@@ -19,6 +19,7 @@ import { UserEntity } from '../databaseEntities/UserEntity';
 import UserService from '../services/user.service';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import EventNotFoundException from '../exceptions/EventNotFoundException';
+import GetEventsByInfraInput from '../inputClasses/GetEventsByInfraInput';
 
 class EventsController implements Controller {
   public path = '/events';
@@ -40,10 +41,13 @@ class EventsController implements Controller {
     this.router.put(`${this.path}/close`, this.closeEvent);
     this.router.delete(`${this.path}/cancel`, this.cancelEvent);
     this.router.get(
-      `${this.path}/list_events_by_infrastructure`,
-      this.listEventsByInfrastructure,
+      `${this.path}/list_events_closed_by_infrastructure`,
+      this.listEventsClosedByInfrastructure,
     );
-    this.router.get(`${this.path}/list_events_by_area`, this.listEventsByArea);
+    this.router.get(
+      `${this.path}/list_events_not_closed_by_infrastructure`,
+      this.listEventsClosedByInfrastructure,
+    );
     this.router.get(`${this.path}/export_event`, this.exportEvent);
     this.router.post(`${this.path}/participate`, this.createEvent);
     //
@@ -148,7 +152,6 @@ class EventsController implements Controller {
   };
 
   public getEvent = async (req: express.Request, res: express.Response) => {
-    //TODO fix this
     const id = parseInt(req.params.id);
     const event: EventEntity = await this.eventsService.getEvent(id);
     if (!event) {
@@ -157,18 +160,48 @@ class EventsController implements Controller {
     res.status(200).send(event);
   };
 
-  public listEventsByArea = async (
+  public listEventsClosedByInfrastructure = async (
     req: express.Request,
     res: express.Response,
+    next: express.NextFunction,
   ) => {
-    res.send('Hello World!');
+    const reqParse: GetEventsByInfraInput = req.body;
+    try {
+      const errors = await validate(reqParse);
+      if (errors.length > 0) {
+        throw new HttpException(400, JSON.stringify(errors));
+      }
+
+      const infra: InfrastructureEntity =
+        await this.infrastructureService.getInfrastructure(reqParse.id);
+      const events: Array<EventEntity> =
+        await this.eventsService.getEventsByInfra(infra, true);
+      res.status(200).send(events);
+    } catch (e) {
+      next(e);
+    }
   };
 
-  public listEventsByInfrastructure = async (
+  public listEventsNotClosedByInfrastructure = async (
     req: express.Request,
     res: express.Response,
+    next: express.NextFunction,
   ) => {
-    res.send('Hello World!');
+    const reqParse: GetEventsByInfraInput = req.body;
+    try {
+      const errors = await validate(reqParse);
+      if (errors.length > 0) {
+        throw new HttpException(400, JSON.stringify(errors));
+      }
+
+      const infra: InfrastructureEntity =
+        await this.infrastructureService.getInfrastructure(reqParse.id);
+      const events: Array<EventEntity> =
+        await this.eventsService.getEventsByInfra(infra, false);
+      res.status(200).send(events);
+    } catch (e) {
+      next(e);
+    }
   };
 
   public exportEvent = async (req: express.Request, res: express.Response) => {

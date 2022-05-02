@@ -35,8 +35,8 @@ class EventsService {
   public async getEventsByInfra(
     infrastructure: InfrastructureEntity,
     closed: boolean,
-  ): Promise<EventEntity> {
-    const event: EventEntity = await this.eventRepo.findOne({
+  ): Promise<Array<EventEntity>> {
+    const event: Array<EventEntity> = await this.eventRepo.find({
       where: {
         infrastructure: infrastructure,
         closed: closed,
