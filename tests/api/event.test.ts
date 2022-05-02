@@ -84,9 +84,7 @@ describe('event create API endpoint test', () => {
       body: JSON.stringify(createEvent),
     };
 
-    const response2 = await fetch(url, options);
-    const msg = await response2.json();
-    expect(msg).toBe(true);
-    expect(response2.status).toBe(200);
+    const createResponse = await fetch(url, options);
+    expect(createResponse.status).toBe(200);
   });
 });
