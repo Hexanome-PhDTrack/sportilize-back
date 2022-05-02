@@ -56,7 +56,7 @@ class InfrastructureService {
     positionRef: Point,
     distance: number,
   ): Promise<Array<InfrastructureEntity>> {
-    // https://aaronfrancis.com/2021/efficient-distance-querying-in-my-sql#:~:text=Calculating%20Distance%20in%20MySQL&text=The%20TL%3BDR%20of%20it,--%20Returns%20distance%20in%20meters.
+    // https://www.movable-type.co.uk/scripts/latlong.html
     const allInfra: Array<InfrastructureEntity> =
       await this.infrastructureRepo.find();
     let resultInfra: Array<InfrastructureEntity> = new Array();
