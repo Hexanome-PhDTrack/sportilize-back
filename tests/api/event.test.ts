@@ -15,9 +15,9 @@ describe('event create API endpoint test', () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
     const createEvent: CreateEventInput = {
-      infrastructureId: 10,
+      infrastructureId: 404133555,
       nbMaxParticipants: 10,
-      sports: ['judo'],
+      sports: ['Judo '],
       description: 'untest',
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
@@ -67,10 +67,10 @@ describe('event create API endpoint test', () => {
 
     // create event
     const createEvent: CreateEventInput = {
-      infrastructureId: 10,
+      infrastructureId: 404133555,
       nbMaxParticipants: 10,
-      sports: ['judo'],
-      description: 'untest',
+      sports: ['Judo '], //TODO remove whitespace
+      description: "untest d'ajout du judo",
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
     };
@@ -79,11 +79,14 @@ describe('event create API endpoint test', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Cookie: cookie,
       },
       body: JSON.stringify(createEvent),
     };
 
-    const response = await fetch(url, options);
-    expect(response.status).toBe(403);
+    const response2 = await fetch(url, options);
+    const msg = await response2.json();
+    expect(msg).toBe(true);
+    expect(response2.status).toBe(200);
   });
 });
