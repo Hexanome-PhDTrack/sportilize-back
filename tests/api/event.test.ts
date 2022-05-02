@@ -79,11 +79,12 @@ describe('event create API endpoint test', () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Cookie: cookie,
       },
       body: JSON.stringify(createEvent),
     };
 
-    const response = await fetch(url, options);
-    expect(response.status).toBe(403);
+    const createResponse = await fetch(url, options);
+    expect(createResponse.status).toBe(200);
   });
 });
