@@ -76,7 +76,7 @@ class EventsController implements Controller {
       if (!infra) {
         throw new InfrastructureNotFoundException(reqParse.infrastructureId);
       }
-      let sports: SportEntity[];
+      let sports: SportEntity[] = [];
       for (const sport of reqParse.sports) {
         const sportEntity: SportEntity = await this.sportService.getSport(
           sport,
@@ -97,8 +97,9 @@ class EventsController implements Controller {
       event.beginDate = new Date(Date.parse(reqParse.beginDate));
       event.endDate = new Date(Date.parse(reqParse.endDate));
       event.closed = false;
+      event.review = '';
 
-      this.eventsService.addEvent(event);
+      await this.eventsService.addEvent(event);
       res.status(200).send(event);
     } catch (e) {
       console.log(e);

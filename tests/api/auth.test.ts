@@ -3,7 +3,8 @@ import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import LoginDto from '../../src/dataTransfertObject/LoginDto';
 
-const BASE_URL = 'https://sportilize.herokuapp.com/api';
+// const BASE_URL = 'https://sportilize.herokuapp.com/api';
+const BASE_URL = 'http://localhost:3000/api';
 const API_VESRION = 'v1';
 
 describe('Auth API endpoint test', () => {

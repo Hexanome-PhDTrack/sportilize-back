@@ -15,7 +15,7 @@ describe('event create API endpoint test', () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
     const createEvent: CreateEventInput = {
-      infrastructureId: 404133555,
+      infrastructureId: 178113406,
       name: 'un event de test',
       nbMaxParticipants: 10,
       sports: ['Judo '],
@@ -44,7 +44,7 @@ describe('event create API endpoint test', () => {
     const urlCon = `${BASE_URL}/${API_VESRION}/${authEndpoint}/${resourceCon}`;
     const userData: LoginDto = {
       password: 'jestTest123',
-      email: 'test832602.1906488243@mail.com',
+      email: 'test@mail.com',
     };
 
     const optionsCon: RequestInit = {
@@ -68,15 +68,14 @@ describe('event create API endpoint test', () => {
 
     // create event
     const createEvent: CreateEventInput = {
-      infrastructureId: 404133555,
+      infrastructureId: 178113406,
       name: 'un event de test',
       nbMaxParticipants: 10,
       sports: ['Judo'],
       description: 'une description de test',
-      beginDate: Date.now().toString(),
-      endDate: (Date.now() + 60 * 1000).toString(),
+      beginDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 60 * 1000).toISOString(),
     };
-
     const options: RequestInit = {
       method: 'POST',
       headers: {
