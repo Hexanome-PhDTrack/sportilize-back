@@ -1,6 +1,5 @@
 import * as express from 'express';
 import Controller from '../interfaces/controller.interface';
-import { AppDataSource } from '../data-source';
 import { EventEntity } from '../databaseEntities/EventEntity';
 import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import { InfrastructureEntity } from '../databaseEntities/InfrastructureEntity';
@@ -54,18 +53,19 @@ class EventsController implements Controller {
   //Events management//
 
   //We're using arrow functions to access props of an instance of the class.
-  public async createEvent(
+  public createEvent = async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
-  ) {
+  ) => {
     const reqParse: CreateEventInput = req.body;
+    console.log(reqParse);
+    console.log(res.locals.jwtPayload.uuid);
     try {
       const errors = await validate(reqParse);
       if (errors.length > 0) {
         throw new HttpException(400, JSON.stringify(errors));
       }
-
       const creator: UserAuthEntity = await this.authenticationService.getUser(
         res.locals.jwtPayload.uuid,
       );
@@ -77,17 +77,16 @@ class EventsController implements Controller {
         throw new InfrastructureNotFoundException(reqParse.infrastructureId);
       }
       let sports: SportEntity[];
-      reqParse.sports.forEach(async function (sport) {
+      for (const sport of reqParse.sports) {
         const sportEntity: SportEntity = await this.sportService.getSport(
           sport,
         );
-
         if (!sportEntity) {
           throw new SportNotFoundException(sport);
         } else {
           sports.push(sportEntity);
         }
-      });
+      }
       const event: EventEntity = new EventEntity();
       event.infrastructure = infra;
       event.creator = creator;
@@ -101,15 +100,16 @@ class EventsController implements Controller {
       this.eventsService.addEvent(event);
       res.status(200).send(event);
     } catch (e) {
+      console.log(e);
       next(e);
     }
-  }
+  };
 
-  public async participateToEvent(
+  public participateToEvent = async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction,
-  ) {
+  ) => {
     const reqParse: ParticipateToEventInput = req.body;
     try {
       const user: UserEntity = await this.userService.getUser(
@@ -132,17 +132,17 @@ class EventsController implements Controller {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
-  public async editEvent(req: express.Request, res: express.Response) {
-    res.send('Hello World!');
-  }
-
-  public closeEvent = (req: express.Request, res: express.Response) => {
+  public editEvent = async (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
-  public cancelEvent = (req: express.Request, res: express.Response) => {
+  public closeEvent = async (req: express.Request, res: express.Response) => {
+    res.send('Hello World!');
+  };
+
+  public cancelEvent = async (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 
@@ -156,18 +156,21 @@ class EventsController implements Controller {
     res.status(200).send(event);
   };
 
-  public listEventsByArea = (req: express.Request, res: express.Response) => {
-    res.send('Hello World!');
-  };
-
-  public listEventsByInfrastructure = (
+  public listEventsByArea = async (
     req: express.Request,
     res: express.Response,
   ) => {
     res.send('Hello World!');
   };
 
-  public exportEvent = (req: express.Request, res: express.Response) => {
+  public listEventsByInfrastructure = async (
+    req: express.Request,
+    res: express.Response,
+  ) => {
+    res.send('Hello World!');
+  };
+
+  public exportEvent = async (req: express.Request, res: express.Response) => {
     res.send('Hello World!');
   };
 }

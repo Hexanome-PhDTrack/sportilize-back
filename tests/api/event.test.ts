@@ -15,9 +15,9 @@ describe('event create API endpoint test', () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
     const createEvent: CreateEventInput = {
-      infrastructureId: 10,
+      infrastructureId: 404133555,
       nbMaxParticipants: 10,
-      sports: ['judo'],
+      sports: ['Judo '],
       description: 'untest',
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
@@ -67,10 +67,10 @@ describe('event create API endpoint test', () => {
 
     // create event
     const createEvent: CreateEventInput = {
-      infrastructureId: 10,
+      infrastructureId: 404133555,
       nbMaxParticipants: 10,
-      sports: ['judo'],
-      description: 'untest',
+      sports: ['Judo '], //TODO remove whitespace
+      description: "untest d'ajout du judo",
       beginDate: Date.now().toString(),
       endDate: (Date.now() + 60 * 1000).toString(),
     };
