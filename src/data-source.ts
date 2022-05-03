@@ -29,4 +29,7 @@ export const AppDataSource = new DataSource({
   ],
   subscribers: [],
   migrations: [],
+  extra: {
+    connectionLimit: 2,
+  },
 });
