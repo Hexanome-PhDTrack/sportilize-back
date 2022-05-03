@@ -1,15 +1,17 @@
 import * as express from 'express';
 import Controller from '../interfaces/controller.interface';
-import { AppDataSource } from '../data-source';
-import { EventEntity } from '../databaseEntities/EventEntity';
-import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
-import SportsService from '../services/sports.service';
-import InfrastructureService from '../services/infrastructures.service';
+import InfrastructuresService from '../services/infrastructures.service';
+import GetInfrastructuresbyAreaInput from '../inputClasses/GetInfrastructuresByAreaInput';
+import { Point } from 'geojson';
+import HttpException from '../exceptions/HttpException';
+import GetInfrastructureInput from '../inputClasses/GetInfrastructureInput';
+import { InfrastructureEntity } from '../databaseEntities/InfrastructureEntity';
+import { validate } from 'class-validator';
 
-class InfrastructureController implements Controller {
+class InfrastructuresController implements Controller {
   public path = '/infrastructures';
   public router = express.Router();
-  public infrastructureService = new InfrastructureService();
+  public infrastructuresService = new InfrastructuresService();
 
   constructor() {
     this.initializeRoutes();
@@ -19,6 +21,7 @@ class InfrastructureController implements Controller {
     //Sports//
     this.router.get(`${this.path}/get_infrastructure`, this.getInfra);
     this.router.get(`${this.path}/get_all_infrastructures`, this.getAllInfras);
+    this.router.get(`${this.path}/get_by_area`, this.getInfrastructureByArea);
   }
 
   //Events management//
@@ -31,7 +34,7 @@ class InfrastructureController implements Controller {
   ) => {
     const infraID = req.query.infraID;
     try {
-      const infra = await this.infrastructureService.getInfra(infraID);
+      const infra = await this.infrastructuresService.getInfra(infraID);
       res.send(infra);
     } catch (e) {
       console.log(e);
@@ -45,8 +48,32 @@ class InfrastructureController implements Controller {
     next: express.NextFunction,
   ) => {
     try {
-      const infras = await this.infrastructureService.getAllInfras();
+      const infras = await this.infrastructuresService.getAllInfras();
       res.send(infras);
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  };
+
+  public getInfrastructureByArea = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    const areaParams: any = req.query;
+    try {
+      const initPoint: Point = {
+        type: 'Point',
+        coordinates: [areaParams.lat, areaParams.long],
+      };
+
+      const infras: Array<InfrastructureEntity> =
+        await this.infrastructuresService.getInfrasByArea(
+          initPoint,
+          areaParams.distanceMax,
+        );
+      res.status(200).send(infras);
     } catch (e) {
       console.log(e);
       next(e);
@@ -54,4 +81,4 @@ class InfrastructureController implements Controller {
   };
 }
 
-export default InfrastructureController;
+export default InfrastructuresController;

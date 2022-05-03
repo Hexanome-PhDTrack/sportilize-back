@@ -1,7 +1,7 @@
 import fetch, { RequestInit } from 'node-fetch-commonjs';
 import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
-import LoginDto from '../../src/databaseEntities/LoginDto';
+import LoginDto from '../../src/dataTransfertObject/LoginDto';
 
 const BASE_URL =
   process.env.NODE_ENV === 'test'
@@ -99,7 +99,6 @@ describe('Auth API endpoint test', () => {
     } catch (e) {
       console.log(e);
     }
-    console.log(jsonRes);
     expect(response.status).toBe(200);
     let cookie = response.headers.get('Set-Cookie');
     expect(cookie.split('Max-Age=')[1]).toBe('3600');

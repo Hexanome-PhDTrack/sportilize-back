@@ -1,17 +1,15 @@
 import fetch, { RequestInit } from 'node-fetch-commonjs';
-import { UserEntity } from '../../src/databaseEntities/UserEntity';
-import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
-import LoginDto from '../../src/databaseEntities/LoginDto';
+import GetInfrastructuresbyAreaInput from '../../src/inputClasses/GetInfrastructuresByAreaInput';
 
 const BASE_URL =
   process.env.NODE_ENV === 'test'
     ? 'http://localhost:3000/api'
     : 'https://sportilize.herokuapp.com/api';
+
 const API_VESRION = 'v1';
+const endpoint = 'infrastructures';
 
-describe('Infrastructures API endpoint test', () => {
-  const endpoint = 'infrastructures';
-
+describe('infrastructures get API endpoint test', () => {
   it('should get a sport named "Terrain multisports".', async () => {
     const resource = 'get_infrastructure';
     const queryParams = {
@@ -52,6 +50,36 @@ describe('Infrastructures API endpoint test', () => {
         },
       ],
     });
+  });
+
+  it('Should get an infrastructure by area', async () => {
+    const resource = 'get_by_area';
+
+    const queryParams: any = {
+      lat: 45.783333, //insa campus
+      long: 4.87442,
+      distanceMax: 500,
+    };
+
+    const params = new URLSearchParams(queryParams).toString();
+    const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}?${params}`;
+    console.log(url);
+
+    const options: RequestInit = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await fetch(url, options);
+
+    let jsonRes;
+    try {
+      jsonRes = await response.json();
+    } catch (e) {}
+    expect(jsonRes).toBe(true);
+    expect(response.status).toBe(200);
   });
 
   it('should get all infrastructures.', async () => {
