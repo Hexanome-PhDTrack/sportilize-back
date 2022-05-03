@@ -18,7 +18,7 @@ describe('event create API endpoint test', () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
     const createEvent: CreateEventInput = {
-      infrastructureId: 178113406,
+      infrastructureId: 247058027,
       name: 'un event de test',
       nbMaxParticipants: 10,
       sports: ['Judo '],
@@ -71,7 +71,7 @@ describe('event create API endpoint test', () => {
 
     // create event
     const createEvent: CreateEventInput = {
-      infrastructureId: 178113406,
+      infrastructureId: 247058027,
       name: 'un event de test',
       nbMaxParticipants: 10,
       sports: ['Judo'],
@@ -90,5 +90,33 @@ describe('event create API endpoint test', () => {
 
     const createResponse = await fetch(url, options);
     expect(createResponse.status).toBe(200);
+  });
+});
+
+describe('event get not closed events by infra API endpoint test', () => {
+  const resource = 'list_events_not_closed_by_infrastructure';
+  it('Should get all not closed events for this infra.', async () => {
+    const queryParams: any = {
+      id: 247058027,
+    };
+
+    const params = new URLSearchParams(queryParams).toString();
+    const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}?${params}`;
+
+    const options: RequestInit = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const response = await fetch(url, options);
+
+    let jsonRes;
+    try {
+      jsonRes = await response.json();
+    } catch (e) {}
+    expect(jsonRes.length).toBeGreaterThan(0);
+    expect(response.status).toBe(200);
   });
 });

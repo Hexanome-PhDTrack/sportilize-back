@@ -46,7 +46,7 @@ class EventsController implements Controller {
     );
     this.router.get(
       `${this.path}/list_events_not_closed_by_infrastructure`,
-      this.listEventsClosedByInfrastructure,
+      this.listEventsNotClosedByInfrastructure,
     );
     this.router.get(`${this.path}/export_event`, this.exportEvent);
     this.router.post(`${this.path}/participate`, this.createEvent);
@@ -165,14 +165,10 @@ class EventsController implements Controller {
     next: express.NextFunction,
   ) => {
     try {
-      const reqParse: GetEventsByInfraInput = req.body;
-      const errors = await validate(reqParse);
-      if (errors.length > 0) {
-        throw new HttpException(400, JSON.stringify(errors));
-      }
+      const id: number = parseInt(req.query.id as string);
 
       const infra: InfrastructureEntity =
-        await this.infrastructureService.getInfra(reqParse.id);
+        await this.infrastructureService.getInfra(id);
       const events: Array<EventEntity> =
         await this.eventsService.getEventsByInfra(infra, true);
       res.status(200).send(events);
@@ -187,14 +183,10 @@ class EventsController implements Controller {
     next: express.NextFunction,
   ) => {
     try {
-      const reqParse: GetEventsByInfraInput = req.body;
-      const errors = await validate(reqParse);
-      if (errors.length > 0) {
-        throw new HttpException(400, JSON.stringify(errors));
-      }
+      const id: number = parseInt(req.query.id as string);
 
       const infra: InfrastructureEntity =
-        await this.infrastructureService.getInfra(reqParse.id);
+        await this.infrastructureService.getInfra(id);
       const events: Array<EventEntity> =
         await this.eventsService.getEventsByInfra(infra, false);
       res.status(200).send(events);
