@@ -1,0 +1,19 @@
+{
+    "users": [
+        {
+            "username": "Bret",
+            "email": "bretLolly@mail.com",
+            "password": "password"
+        },
+        {
+            "username": "Dan",
+            "email": "DanWarrior@mail.com",
+            "password": "123556"
+        },
+        {
+            "username": "Luc",
+            "email": "LucSkywalker@mail.com",
+            "password": "ABCDEF"
+        }
+    ]
+}
