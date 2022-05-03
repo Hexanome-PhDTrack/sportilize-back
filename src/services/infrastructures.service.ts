@@ -70,9 +70,10 @@ class InfrastructureService {
     // https://www.movable-type.co.uk/scripts/latlong.html
     const allInfra: Array<InfrastructureEntity> = await this.infrasRepo.find();
     let resultInfra: Array<InfrastructureEntity> = new Array();
-    for (let i: number; i < allInfra.length; i++) {
+    for (let i: number = 0; i < allInfra.length; i++) {
       const infra: InfrastructureEntity = allInfra[i];
       const pointInfra: Point = JSON.parse(infra.point);
+
       if (
         Math.abs(
           calculDist(
