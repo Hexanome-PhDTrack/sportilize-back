@@ -15,6 +15,7 @@ let infrastructureRepository: undefined | Repository<InfrastructureEntity> =
 let sportRepository: undefined | Repository<SportEntity> = undefined;
 let allSports: SportEntity[] = [];
 let allInfrastructures: InfrastructureEntity[] = [];
+const LIMITER: undefined | Number = 10;
 
 async function loadJSONFile(filePath: string) {
   try {
@@ -169,7 +170,9 @@ async function main() {
       for (let j = 0; j < sportsArray.length; j++) {
         const sportName = sportsArray[j];
         if (sportName !== '') {
-          const sport = AddNewSportInArray(sportName);
+          // remove spaces before and after sport name
+          const sportNameTrimmed = sportName.trim();
+          const sport = AddNewSportInArray(sportNameTrimmed);
           sports.push(sport);
         }
       }
@@ -185,7 +188,7 @@ async function main() {
 
   // save allSports to database
   let counterSportsSaved = 0;
-  /*for (let i = 0; i < allSports.length; i++) {
+  for (let i = 0; i < allSports.length; i++) {
     try {
       await sportRepository.save(allSports[i]);
       counterSportsSaved++;
@@ -196,21 +199,27 @@ async function main() {
         console.log(error);
       }
     }
-  }*/
+  }
 
   // save allInfrastructures to database
   let counterInfrastructuresSaved = 0;
   for (let i = 220; i < allInfrastructures.length; i++) {
-    try {
-      await infrastructureRepository.save(allInfrastructures[i]);
-      counterInfrastructuresSaved++;
-    } catch (error) {
-      console.log(error);
+    // activate limiter only on infrastructures
+    if (LIMITER == undefined || counterInfrastructuresSaved < LIMITER) {
+      try {
+        await infrastructureRepository.save(allInfrastructures[i]);
+        counterInfrastructuresSaved++;
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 
   // log stats
   console.log(`########## STATS ##########`);
+  if (LIMITER != undefined) {
+    console.log(`LIMITER=${LIMITER} activated to save request number to DB...`);
+  }
   console.log(`+++ ${counterSportsSaved} sports added`);
   console.log(`+++ ${counterInfrastructuresSaved} infrastructures added`);
   console.log(`>>> ${counter} items matched`);
