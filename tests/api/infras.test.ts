@@ -9,13 +9,13 @@ const BASE_URL =
     : 'https://sportilize.herokuapp.com/api';
 const API_VESRION = 'v1';
 
-describe('Sports API endpoint test', () => {
-  const endpoint = 'sports';
+describe('Infrastructures API endpoint test', () => {
+  const endpoint = 'infrastructures';
 
-  it('should get a sport named "Golf".', async () => {
-    const resource = 'get_sport';
+  it('should get a sport named "Terrain multisports".', async () => {
+    const resource = 'get_infrastructure';
     const queryParams = {
-      sportName: 'Golf',
+      infraID: '102191319',
     };
     const params = new URLSearchParams(queryParams);
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}?${params}`;
@@ -34,11 +34,28 @@ describe('Sports API endpoint test', () => {
       console.log(e);
     }
     expect(response.status).toBe(200);
-    expect(jsonRes).toStrictEqual({ id: 392, name: 'Golf' });
+    expect(jsonRes).toStrictEqual({
+      address: '0 Cité René Peillon, 69700 Givors',
+      creator: 'sportilize',
+      id: 102191319,
+      name: 'Terrain Multisports',
+      occupiedHours: '',
+      point: '{"type":"Point","coordinates":["4.79472000","45.56838000"]}',
+      sports: [
+        {
+          id: 819,
+          name: 'Football',
+        },
+        {
+          id: 2359,
+          name: 'Football en salle (Futsal)',
+        },
+      ],
+    });
   });
 
-  it('should get all sports.', async () => {
-    const resource = 'get_all_sports';
+  it('should get all infrastructures.', async () => {
+    const resource = 'get_all_infrastructures';
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
     const options: RequestInit = {
       method: 'GET',
@@ -54,8 +71,7 @@ describe('Sports API endpoint test', () => {
     } catch (e) {
       console.log(e);
     }
-
-    expect(jsonRes.length).toBe(55);
+    expect(jsonRes.length).toBe(314);
     expect(response.status).toBe(200);
   });
 });

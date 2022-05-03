@@ -4,8 +4,10 @@ import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import LoginDto from '../../src/databaseEntities/LoginDto';
 import { v4 as uuidv4 } from 'uuid';
 
-const BASE_URL = 'https://sportilize.herokuapp.com/api';
-// const BASE_URL = "http://localhost:3000/api"
+const BASE_URL =
+  process.env.NODE_ENV === 'test'
+    ? 'http://localhost:3000/api'
+    : 'https://sportilize.herokuapp.com/api';
 const API_VESRION = 'v1';
 
 describe('User API unauthenticated tests', () => {
