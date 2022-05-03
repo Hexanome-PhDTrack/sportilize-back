@@ -56,8 +56,8 @@ describe('infrastructures get API endpoint test', () => {
     const resource = 'get_by_area';
 
     const queryParams: any = {
-      lat: 4.87828, //insa campus
-      long: 45.75043,
+      lat: 45.75043, //insa campus
+      long: 4.87828,
       distanceMax: 500,
     };
 
