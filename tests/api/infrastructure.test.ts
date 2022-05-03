@@ -73,7 +73,6 @@ describe('infrastructures get API endpoint test', () => {
     };
 
     const response = await fetch(url, options);
-
     let jsonRes;
     try {
       jsonRes = await response.json();

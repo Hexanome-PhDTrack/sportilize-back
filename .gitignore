@@ -3,6 +3,8 @@ node_modules/
 
 #env variables
 .env
+.env1
+.env2
 
 #ide settings
 sportif-back.iml
@@ -19,3 +21,4 @@ dist/
 *.log
 .vscode/settings.json
 Jaws spryr.session.sql
+maria db j5zntoc.session.sql

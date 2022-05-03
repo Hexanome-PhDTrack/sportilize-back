@@ -62,10 +62,10 @@ class EventsController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    const reqParse: CreateEventInput = req.body;
-    console.log(reqParse);
-    console.log(res.locals.jwtPayload.uuid);
     try {
+      const reqParse: CreateEventInput = req.body;
+      console.log(reqParse);
+      console.log(res.locals.jwtPayload.uuid);
       const errors = await validate(reqParse);
       if (errors.length > 0) {
         throw new HttpException(400, JSON.stringify(errors));
@@ -114,8 +114,8 @@ class EventsController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    const reqParse: ParticipateToEventInput = req.body;
     try {
+      const reqParse: ParticipateToEventInput = req.body;
       const user: UserEntity = await this.userService.getUser(
         reqParse.userUuid,
       );
@@ -164,8 +164,8 @@ class EventsController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    const reqParse: GetEventsByInfraInput = req.body;
     try {
+      const reqParse: GetEventsByInfraInput = req.body;
       const errors = await validate(reqParse);
       if (errors.length > 0) {
         throw new HttpException(400, JSON.stringify(errors));
@@ -186,8 +186,8 @@ class EventsController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    const reqParse: GetEventsByInfraInput = req.body;
     try {
+      const reqParse: GetEventsByInfraInput = req.body;
       const errors = await validate(reqParse);
       if (errors.length > 0) {
         throw new HttpException(400, JSON.stringify(errors));
