@@ -144,7 +144,7 @@ async function main() {
       // new geojson Point
       const point: Point = {
         type: 'Point',
-        coordinates: [dataSports2016Item.EquGpsX, dataSports2016Item.EquGpsY],
+        coordinates: [dataSports2016Item.EquGpsY, dataSports2016Item.EquGpsX],
       };
       infrastructure.point = JSON.stringify(point);
 
