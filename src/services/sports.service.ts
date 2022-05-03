@@ -1,17 +1,6 @@
-import * as jwt from 'jsonwebtoken';
-import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
 import { DataSource, Repository } from 'typeorm';
-import TokenData from '../interfaces/tokenData.interface';
-import DataStoredInToken from '../interfaces/dataStoredInToken.interface';
 import { AppDataSource } from '../data-source';
-import express, { NextFunction } from 'express';
-import UserNotFoundException from '../exceptions/UserNotFoundException';
-import WrongCredentialsException from '../exceptions/WrongCredentialsException';
-import UserExistsException from '../exceptions/UserExistsException';
-import LoginDto from '../databaseEntities/LoginDto';
-import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
-import { UserEntity } from '../databaseEntities/UserEntity';
 import { SportEntity } from '../databaseEntities/SportEntity';
 
 class SportsService {

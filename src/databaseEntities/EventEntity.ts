@@ -17,6 +17,9 @@ export class EventEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  name: string;
+
   @ManyToOne('InfrastructureEntity', 'eventEntity', {
     eager: true,
   })

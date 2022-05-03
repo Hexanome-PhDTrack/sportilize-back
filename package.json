@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest tests/",
+    "test:remote": "NODE_ENV='remote' jest tests/",
     "build": "tsc",
     "start": "node dist/src/server.js",
     "prepare": "husky install"
@@ -30,6 +31,7 @@
   },
   "dependencies": {
     "@types/express": "4",
+    "@types/geojson": "^7946.0.8",
     "@types/jest": "^27.4.1",
     "body-parser": "^1.20.0",
     "class-validator": "^0.13.2",

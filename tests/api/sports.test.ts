@@ -1,7 +1,4 @@
 import fetch, { RequestInit } from 'node-fetch-commonjs';
-import { UserEntity } from '../../src/databaseEntities/UserEntity';
-import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
-import LoginDto from '../../src/databaseEntities/LoginDto';
 
 const BASE_URL =
   process.env.NODE_ENV === 'test'

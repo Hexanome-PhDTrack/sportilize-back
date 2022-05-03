@@ -8,7 +8,7 @@ import express from 'express';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
 import UserExistsException from '../exceptions/UserExistsException';
-import LoginDto from '../databaseEntities/LoginDto';
+import LoginDto from '../dataTransfertObject/LoginDto';
 import { validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
 
@@ -19,6 +19,14 @@ export class AuthenticationService {
   constructor() {
     this.dbConnection = AppDataSource;
     this.userAuthRepo = this.dbConnection.getRepository(UserAuthEntity);
+  }
+
+  public async getUser(uuid: string): Promise<UserAuthEntity> {
+    const user: UserAuthEntity = await this.userAuthRepo.findOne({
+      where: { uuid: uuid },
+    });
+
+    return user;
   }
 
   public async register(userData: UserAuthEntity) {

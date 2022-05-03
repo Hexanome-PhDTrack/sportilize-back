@@ -4,8 +4,8 @@ import EventsController from './controllers/eventsController';
 import validateEnv from './utils/validateEnv';
 import AuthController from './controllers/auth.controller';
 import UsersAuthController from './controllers/usersAuth.controller';
+import InfrastructuresController from './controllers/infrastructures.controller';
 import SportsController from './controllers/sports.controller';
-import InfrastructureController from './controllers/infrastructures.controller';
 
 validateEnv();
 
@@ -16,7 +16,7 @@ async function main() {
     new UsersAuthController(),
     new EventsController(),
     new SportsController(),
-    new InfrastructureController(),
+    new InfrastructuresController(),
   ]);
   await app.connectToDb();
   app.listen();
