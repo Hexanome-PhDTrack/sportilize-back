@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest tests/",
+    "test:remote":"NODE_ENV='remote' jest tests/",
+
     "build": "tsc",
     "start": "node dist/src/server.js",
     "prepare": "husky install"

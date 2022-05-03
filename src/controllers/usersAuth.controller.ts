@@ -39,6 +39,7 @@ class UsersAuthController implements Controller {
       const user = await this.usersAuthService.userInfo(email.toString());
       res.send(user);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
@@ -54,6 +55,7 @@ class UsersAuthController implements Controller {
       //PUT REQUEST DON'T SEND A BODY
       res.status(204).send();
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };

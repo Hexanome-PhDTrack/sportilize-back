@@ -71,10 +71,10 @@ describe('event create API endpoint test', () => {
 
     // create event
     const createEvent: CreateEventInput = {
-      infrastructureId: 178113406,
+      infrastructureId: 247058027,
       name: 'un event de test',
       nbMaxParticipants: 10,
-      sports: ['Judo'],
+      sports: ['Football'],
       description: 'une description de test',
       beginDate: new Date().toISOString(),
       endDate: new Date(Date.now() + 60 * 1000).toISOString(),
