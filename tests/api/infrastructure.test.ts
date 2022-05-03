@@ -56,8 +56,8 @@ describe('infrastructures get API endpoint test', () => {
     const resource = 'get_by_area';
 
     const queryParams: any = {
-      lat: 45.75043, //insa campus
-      long: 4.87828,
+      lat: 45.783333, //insa campus
+      long: 4.87442,
       distanceMax: 500,
     };
 
@@ -73,12 +73,11 @@ describe('infrastructures get API endpoint test', () => {
     };
 
     const response = await fetch(url, options);
-
     let jsonRes;
     try {
       jsonRes = await response.json();
     } catch (e) {}
-    expect(jsonRes.length).toBe(4);
+    expect(jsonRes).toBe(true);
     expect(response.status).toBe(200);
   });
 

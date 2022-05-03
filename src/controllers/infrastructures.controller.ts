@@ -32,8 +32,8 @@ class InfrastructuresController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
+    const infraID = req.query.infraID;
     try {
-      const infraID = req.query.infraID;
       const infra = await this.infrastructuresService.getInfra(infraID);
       res.send(infra);
     } catch (e) {
@@ -61,8 +61,8 @@ class InfrastructuresController implements Controller {
     res: express.Response,
     next: express.NextFunction,
   ) => {
+    const areaParams: any = req.query;
     try {
-      const areaParams: any = req.query;
       const initPoint: Point = {
         type: 'Point',
         coordinates: [areaParams.lat, areaParams.long],

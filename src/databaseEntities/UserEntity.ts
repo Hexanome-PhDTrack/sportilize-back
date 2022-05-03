@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 import { EventEntity } from './EventEntity';
 
+export const DEFAULT_USER_ROLE: string = '';
+
 // @Unique(['username'])
 @Entity()
 export class UserEntity {
