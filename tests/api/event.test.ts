@@ -3,6 +3,7 @@ import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import CreateEventInput from '../../src/inputClasses/CreateEventInput';
 import LoginDto from '../../src/dataTransfertObject/LoginDto';
+import CloseEventInput from '../../src/inputClasses/CloseEventInput';
 
 const BASE_URL =
   process.env.NODE_ENV === 'test'
@@ -13,10 +14,9 @@ const endpoint = 'events';
 const authEndpoint = 'auth';
 
 describe('event create API endpoint test', () => {
-  const resource = 'create';
   it("should fail because we aren't connected.", async () => {
+    const resource = 'create';
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
-
     const createEvent: CreateEventInput = {
       infrastructureId: 247058027,
       name: 'un event de test',
@@ -39,63 +39,98 @@ describe('event create API endpoint test', () => {
     expect(response.status).toBe(403);
   });
 
-  it('Should connect and create a new event.', async () => {
-    const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
+  describe('Open and close events', () => {
+    var cookie, userId;
+    beforeAll(async () => {
+      // connection
+      const resourceCon = 'login';
+      const urlCon = `${BASE_URL}/${API_VESRION}/${authEndpoint}/${resourceCon}`;
+      const userData: LoginDto = {
+        password: 'jestTest123',
+        email: 'test@mail.com',
+      };
 
-    // connection
-    const resourceCon = 'login';
-    const urlCon = `${BASE_URL}/${API_VESRION}/${authEndpoint}/${resourceCon}`;
-    const userData: LoginDto = {
-      password: 'jestTest123',
-      email: 'test@mail.com',
-    };
+      const optionsCon: RequestInit = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      };
 
-    const optionsCon: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    };
+      const response = await fetch(urlCon, optionsCon);
+      let jsonRes;
+      try {
+        jsonRes = await response.json();
+      } catch (e) {
+        console.log(e);
+      }
+      cookie = response.headers.get('Set-Cookie');
+      userId = jsonRes.id;
+    });
 
-    const response = await fetch(urlCon, optionsCon);
-    let jsonRes;
-    try {
-      jsonRes = await response.json();
-    } catch (e) {
-      console.log(e);
-    }
-    expect(response.status).toBe(200);
-    let cookie = response.headers.get('Set-Cookie');
-    expect(cookie.split('Max-Age=')[1]).toBe('3600');
+    var eventId;
+    it('Should connect and create a new event.', async () => {
+      const resource = 'create';
+      const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
+      // create event
+      const createEvent: CreateEventInput = {
+        infrastructureId: 247058027,
+        name: 'un event de test',
+        nbMaxParticipants: 10,
+        sports: ['Football'],
+        description: 'une description de test',
+        beginDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+      };
+      const options: RequestInit = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookie,
+        },
+        body: JSON.stringify(createEvent),
+      };
 
-    // create event
-    const createEvent: CreateEventInput = {
-      infrastructureId: 247058027,
-      name: 'un event de test',
-      nbMaxParticipants: 10,
-      sports: ['Football'],
-      description: 'une description de test',
-      beginDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 60 * 1000).toISOString(),
-    };
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: cookie,
-      },
-      body: JSON.stringify(createEvent),
-    };
+      const response = await fetch(url, options);
+      let jsonRes;
+      try {
+        jsonRes = await response.json();
+      } catch (e) {}
+      eventId = jsonRes.id;
+      expect(response.status).toBe(200);
+    });
 
-    const createResponse = await fetch(url, options);
-    expect(createResponse.status).toBe(200);
+    it('should close the previous event', async () => {
+      const resource = 'close';
+      const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
+      // closing event
+      const closeEvent: CloseEventInput = {
+        eventId: eventId,
+        endDate: new Date().toISOString(),
+        review: 'Great',
+      };
+      const options: RequestInit = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookie,
+        },
+        body: JSON.stringify(closeEvent),
+      };
+      const response = await fetch(url, options);
+      let jsonRes;
+      try {
+        jsonRes = await response.json();
+      } catch (e) {}
+      expect(response.status).toBe(200);
+    });
   });
 });
 
 describe('event get not closed events by infra API endpoint test', () => {
   const resource = 'list_events_not_closed_by_infrastructure';
-  it('Should get all not closed events for this infra.', async () => {
+  it('Should get all open events for this infra.', async () => {
     const queryParams: any = {
       id: 247058027,
     };
