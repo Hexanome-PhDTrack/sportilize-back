@@ -56,6 +56,20 @@ class UsersAuthService {
     });
   }
 
+  public async deleteUser(uuid, email, password) {
+    const existingUser = await this.usersAuthRepo.findOne({
+      where: { email: email },
+    });
+    if (!existingUser) {
+      throw new UserNotFoundException(email);
+    }
+    if (!existingUser.uuid === uuid)
+      throw new HttpException(403, 'UUID not corresponding to email');
+    if (!existingUser.password === password)
+      throw new HttpException(403, 'Wrong password');
+    await this.usersAuthRepo.delete({ email: email });
+  }
+
   public async logout() {
     return 'Authorization=;Max-age=0';
   }
