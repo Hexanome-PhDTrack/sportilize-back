@@ -50,9 +50,10 @@ class UsersAuthController implements Controller {
     res: express.Response,
     next: NextFunction,
   ) => {
+    const uuid = res.locals.jwtPayload.uuid;
     const userData: UserAuthEntity = req.body;
     try {
-      await this.usersAuthService.edit(userData);
+      await this.usersAuthService.edit(userData, uuid);
       //PUT REQUEST DON'T SEND A BODY
       res.status(204).send();
     } catch (e) {
