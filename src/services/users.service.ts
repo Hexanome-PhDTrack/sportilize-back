@@ -54,6 +54,14 @@ class UsersService {
     return user;
   }
 
+  public async getUser(uuid: string): Promise<UserEntity> {
+    const user: UserEntity = await this.usersRepo.findOne({
+      where: { uuid: uuid },
+    });
+
+    return user;
+  }
+
   public async edit(userData: UserEntity) {
     const existingUser = await this.usersRepo.findOne({
       where: { uuid: userData.uuid },

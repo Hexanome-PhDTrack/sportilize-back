@@ -78,7 +78,7 @@ describe('infrastructures get API endpoint test', () => {
     try {
       jsonRes = await response.json();
     } catch (e) {}
-    expect(jsonRes).toBe(true);
+    expect(jsonRes.length).toBeGreaterThan(0);
     expect(response.status).toBe(200);
   });
 

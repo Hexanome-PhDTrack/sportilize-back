@@ -48,8 +48,17 @@ class EventsController implements Controller {
       `${this.path}/list_events_not_closed_by_infrastructure`,
       this.listEventsNotClosedByInfrastructure,
     );
+    this.router.get(
+      `${this.path}/get_organized_by_user`,
+      checkJwt,
+      this.getEventsOrganizedByUser,
+    );
+    this.router.get(
+      `${this.path}/get_events_to_participate`,
+      this.getEventsToParticipate,
+    );
     this.router.get(`${this.path}/export_event`, this.exportEvent);
-    this.router.post(`${this.path}/participate`, this.createEvent);
+    this.router.post(`${this.path}/participate`, this.participateToEvent);
     //
     this.router.put(`${this.path}/get_event`, this.getEvent);
   }
@@ -116,6 +125,7 @@ class EventsController implements Controller {
   ) => {
     try {
       const reqParse: ParticipateToEventInput = req.body;
+      //console.log("participate : " + JSON.stringify(reqParse));
       const user: UserEntity = await this.userService.getUser(
         reqParse.userUuid,
       );
@@ -189,6 +199,46 @@ class EventsController implements Controller {
         await this.infrastructureService.getInfra(id);
       const events: Array<EventEntity> =
         await this.eventsService.getEventsByInfra(infra, false);
+      res.status(200).send(events);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public getEventsOrganizedByUser = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    try {
+      const creator: UserAuthEntity = await this.authenticationService.getUser(
+        res.locals.jwtPayload.uuid,
+      );
+
+      const events: Array<EventEntity> =
+        await this.eventsService.getEventsOrganizedByUser(creator);
+
+      res.status(200).send(events);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public getEventsToParticipate = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    try {
+      const uuid: string = req.query.uuid as string;
+      const user: UserEntity = await this.userService.getUser(uuid);
+      if (!user) {
+        throw new UserNotFoundException(user.uuid);
+      }
+
+      const events: Array<EventEntity> =
+        await this.eventsService.getEventsToParticipateUser(user);
+
       res.status(200).send(events);
     } catch (e) {
       next(e);

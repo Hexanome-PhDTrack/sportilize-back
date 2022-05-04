@@ -1,10 +1,12 @@
 import { EventEntity } from '../databaseEntities/EventEntity';
 import { ArrayContains, DataSource, Repository } from 'typeorm';
 import { AppDataSource } from '../data-source';
-import { validate } from 'class-validator';
+import { arrayContains, validate } from 'class-validator';
 import HttpException from '../exceptions/HttpException';
 import { InfrastructureEntity } from '../databaseEntities/InfrastructureEntity';
 import { Point } from 'geojson';
+import { UserAuthEntity } from '../databaseEntities/UserAuthEntity';
+import { UserEntity } from '../databaseEntities/UserEntity';
 
 class EventsService {
   public dbConnection: DataSource;
@@ -46,8 +48,32 @@ class EventsService {
     return event;
   }
 
+  public async getEventsOrganizedByUser(
+    user: UserAuthEntity,
+  ): Promise<Array<EventEntity>> {
+    const event: Array<EventEntity> = await this.eventRepo.find({
+      where: {
+        creator: { id: user.id },
+      },
+    });
+
+    return event;
+  }
+
   public async updateEvent(eventData: EventEntity) {
     const event = await this.eventRepo.save(eventData);
+    return event;
+  }
+
+  public async getEventsToParticipateUser(
+    user: UserEntity,
+  ): Promise<Array<EventEntity>> {
+    const event: Array<EventEntity> = await this.eventRepo.find({
+      where: {
+        participants: ArrayContains([user]),
+      },
+    });
+
     return event;
   }
 }
