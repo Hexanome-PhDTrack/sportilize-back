@@ -69,7 +69,7 @@ describe('event create API endpoint test', () => {
     }
     expect(response.status).toBe(200);
     let cookie = response.headers.get('Set-Cookie');
-    expect(cookie.split('Max-Age=')[1]).toBe('3600');
+    expect(cookie.split('Max-Age=')[1]).toBe('315360000');
 
     // create event
     const createEvent: CreateEventInput = {
@@ -122,7 +122,7 @@ describe('event create API endpoint test', () => {
     }
     expect(response.status).toBe(200);
     let cookie = response.headers.get('Set-Cookie');
-    expect(cookie.split('Max-Age=')[1]).toBe('3600');
+    expect(cookie.split('Max-Age=')[1]).toBe('315360000');
 
     // get event
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${getOrganizedResource}`;
