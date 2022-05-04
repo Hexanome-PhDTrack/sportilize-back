@@ -15,7 +15,7 @@ let infrastructureRepository: undefined | Repository<InfrastructureEntity> =
 let sportRepository: undefined | Repository<SportEntity> = undefined;
 let allSports: SportEntity[] = [];
 let allInfrastructures: InfrastructureEntity[] = [];
-const LIMITER: undefined | Number = 10;
+const LIMITER: undefined | Number = undefined;
 
 async function loadJSONFile(filePath: string) {
   try {

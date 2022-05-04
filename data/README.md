@@ -14,6 +14,13 @@
 
 `nvm install --lts`: install and use latest LTS version of `node`
 
+Install `ts-node-script` command for simple TypeScript script execution:
+
+```
+npm install -g typescript
+npm install -g ts-node
+```
+
 ### node script
 
 `ts-script has been deprecated and will be removed in the next major release. Please use ts-node-script instead`

@@ -33,6 +33,7 @@ class AuthController implements Controller {
       res.setHeader('Set-Cookie', [cookie]);
       res.status(201).send(user);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
@@ -51,6 +52,7 @@ class AuthController implements Controller {
       res.setHeader('Set-Cookie', [cookie]);
       res.send(user);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
@@ -80,6 +82,7 @@ class AuthController implements Controller {
       );
       res.status(204).send();
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };

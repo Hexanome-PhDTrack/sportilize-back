@@ -74,7 +74,7 @@ describe('event create API endpoint test', () => {
       infrastructureId: 247058027,
       name: 'un event de test',
       nbMaxParticipants: 10,
-      sports: ['Terrain de Football'],
+      sports: ['Football'],
       description: 'une description de test',
       beginDate: new Date().toISOString(),
       endDate: new Date(Date.now() + 60 * 1000).toISOString(),

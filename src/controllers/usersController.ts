@@ -54,6 +54,7 @@ class UsersController implements Controller {
       const user = await this.usersService.userInfo(uuid.toString());
       res.send(user);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
@@ -68,6 +69,7 @@ class UsersController implements Controller {
       const editedUser = await this.usersService.edit(userData);
       res.status(204).send(editedUser);
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
