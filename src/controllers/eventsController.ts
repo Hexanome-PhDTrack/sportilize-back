@@ -14,12 +14,13 @@ import HttpException from '../exceptions/HttpException';
 import { SportEntity } from '../databaseEntities/SportEntity';
 import InfrastructureNotFoundException from '../exceptions/InfrastructureNotFoundException';
 import SportNotFoundException from '../exceptions/SportNotFoundException';
-import ParticipateToEventInput from '../inputClasses/ParticipateToEventInput';
+import ParticipateAndWithdrawToEventInput from '../inputClasses/ParticipateAndWithdrawToEventInput';
 import { UserEntity } from '../databaseEntities/UserEntity';
 import UserService from '../services/user.service';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import EventNotFoundException from '../exceptions/EventNotFoundException';
 import GetEventsByInfraInput from '../inputClasses/GetEventsByInfraInput';
+import CantWithdrawNotParticipatedEvent from '../exceptions/CantWithdrawNotParticipatedEvent';
 
 class EventsController implements Controller {
   public path = '/events';
@@ -59,6 +60,7 @@ class EventsController implements Controller {
     );
     this.router.get(`${this.path}/export_event`, this.exportEvent);
     this.router.post(`${this.path}/participate`, this.participateToEvent);
+    this.router.post(`${this.path}/withdraw`, this.withdraw);
     //
     this.router.put(`${this.path}/get_event`, this.getEvent);
   }
@@ -124,7 +126,7 @@ class EventsController implements Controller {
     next: express.NextFunction,
   ) => {
     try {
-      const reqParse: ParticipateToEventInput = req.body;
+      const reqParse: ParticipateAndWithdrawToEventInput = req.body;
       //console.log("participate : " + JSON.stringify(reqParse));
       const user: UserEntity = await this.userService.getUser(
         reqParse.userUuid,
@@ -141,6 +143,47 @@ class EventsController implements Controller {
       }
 
       event.participants.push(user);
+      this.eventsService.updateEvent(event);
+      res.status(200).send(event);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  public withdraw = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    try {
+      const reqParse: ParticipateAndWithdrawToEventInput = req.body;
+      //console.log("participate : " + JSON.stringify(reqParse));
+      const user: UserEntity = await this.userService.getUser(
+        reqParse.userUuid,
+      );
+      if (!user) {
+        throw new UserNotFoundException(reqParse.userUuid);
+      }
+
+      const event: EventEntity = await this.eventsService.getEvent(
+        reqParse.eventId,
+      );
+      if (!event) {
+        throw new EventNotFoundException(reqParse.eventId);
+      }
+
+      const newParticipants: Array<UserEntity> = event.participants.filter(
+        (value: UserEntity) => {
+          value.uuid != user.uuid;
+        },
+      );
+
+      if (event.participants.length == newParticipants.length) {
+        throw new CantWithdrawNotParticipatedEvent(user.uuid, event.id);
+      }
+
+      event.participants = newParticipants;
+
       this.eventsService.updateEvent(event);
       res.status(200).send(event);
     } catch (e) {

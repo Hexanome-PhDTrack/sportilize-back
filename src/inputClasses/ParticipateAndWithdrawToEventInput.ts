@@ -1,6 +1,6 @@
 import { IsArray, IsDateString, isInt, IsInt, IsString } from 'class-validator';
 
-class ParticipateToEventInput {
+class ParticipateAndWithdrawToEventInput {
   @IsString()
   public userUuid: string;
 
@@ -8,4 +8,4 @@ class ParticipateToEventInput {
   public eventId: number;
 }
 
-export default ParticipateToEventInput;
+export default ParticipateAndWithdrawToEventInput;

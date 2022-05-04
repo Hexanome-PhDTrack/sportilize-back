@@ -3,7 +3,7 @@ import { UserEntity } from '../../src/databaseEntities/UserEntity';
 import { UserAuthEntity } from '../../src/databaseEntities/UserAuthEntity';
 import CreateEventInput from '../../src/inputClasses/CreateEventInput';
 import LoginDto from '../../src/dataTransfertObject/LoginDto';
-import ParticipateToEventInput from '../../src/inputClasses/ParticipateToEventInput';
+import ParticipateAndWithdrawToEventInput from '../../src/inputClasses/ParticipateAndWithdrawToEventInput';
 
 const BASE_URL =
   process.env.NODE_ENV === 'test'
@@ -176,7 +176,7 @@ describe('event participate API endpoint test', () => {
   it('Should participate to an event', async () => {
     const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${participateResource}`;
     // create event
-    const participateOption: ParticipateToEventInput = {
+    const participateOption: ParticipateAndWithdrawToEventInput = {
       userUuid: '18c0a621-59e3-4800-8061-f07f94477d56',
       eventId: 1,
     };
@@ -216,5 +216,25 @@ describe('event participate API endpoint test', () => {
     } catch (e) {}
     expect(response.status).toBe(200);
     expect(jsonRes.length).toBeGreaterThan(0);
+  });
+
+  const withdrawResource = 'withdraw';
+
+  it('Should withdraw an event', async () => {
+    const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${withdrawResource}`;
+    // create event
+    const participateOption: ParticipateAndWithdrawToEventInput = {
+      userUuid: '18c0a621-59e3-4800-8061-f07f94477d56',
+      eventId: 1,
+    };
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(participateOption),
+    };
+    const response = await fetch(url, options);
+    expect(response.status).toBe(200);
   });
 });
