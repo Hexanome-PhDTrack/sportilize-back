@@ -21,6 +21,8 @@ import UserNotFoundException from '../exceptions/UserNotFoundException';
 import EventNotFoundException from '../exceptions/EventNotFoundException';
 import GetEventsByInfraInput from '../inputClasses/GetEventsByInfraInput';
 import CantWithdrawNotParticipatedEvent from '../exceptions/CantWithdrawNotParticipatedEvent';
+// @ts-ignore
+import CloseEventInput from '../inputClasses/CloseEventInput';
 
 class EventsController implements Controller {
   public path = '/events';
@@ -39,7 +41,7 @@ class EventsController implements Controller {
     //Events Management//
     this.router.post(`${this.path}/create`, checkJwt, this.createEvent);
     this.router.put(`${this.path}/edit`, checkJwt, this.editEvent);
-    this.router.put(`${this.path}/close`, this.closeEvent);
+    this.router.put(`${this.path}/close`, checkJwt, this.closeEvent);
     this.router.delete(`${this.path}/cancel`, this.cancelEvent);
     this.router.get(
       `${this.path}/list_events_closed_by_infrastructure`,
@@ -75,8 +77,6 @@ class EventsController implements Controller {
   ) => {
     try {
       const reqParse: CreateEventInput = req.body;
-      console.log(reqParse);
-      console.log(res.locals.jwtPayload.uuid);
       const errors = await validate(reqParse);
       if (errors.length > 0) {
         throw new HttpException(400, JSON.stringify(errors));
@@ -195,8 +195,21 @@ class EventsController implements Controller {
     res.send('Hello World!');
   };
 
-  public closeEvent = async (req: express.Request, res: express.Response) => {
-    res.send('Hello World!');
+  public closeEvent = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    try {
+      const reqParse: CloseEventInput = req.body;
+      const { eventId, endDate, review } = reqParse;
+      const userId = res.locals.jwtPayload.uuid;
+      await this.eventsService.closeEvent(eventId, userId, endDate, review);
+      res.status(200).send();
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
   };
 
   public cancelEvent = async (req: express.Request, res: express.Response) => {
