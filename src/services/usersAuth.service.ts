@@ -39,13 +39,15 @@ class UsersAuthService {
     return user;
   }
 
-  public async edit(userData: UserAuthEntity) {
+  public async edit(userData: UserAuthEntity, uuid) {
     const existingUser = await this.usersAuthRepo.findOne({
       where: { email: userData.email },
     });
     if (!existingUser) {
       throw new UserNotFoundException(userData.email);
     }
+    if (existingUser.uuid !== uuid)
+      throw new HttpException(403, "Can't modify another user's info.");
     const errors = await validate(userData);
     if (errors.length > 0) {
       throw new HttpException(400, JSON.stringify(errors));
