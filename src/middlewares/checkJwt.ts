@@ -6,7 +6,6 @@ import TokenData from '../interfaces/tokenData.interface';
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   //Get the jwt token from the head
-  console.log('jwt');
   const token = req.cookies.Authorization;
   console.log(token);
   let jwtPayload;
@@ -14,7 +13,6 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
   //Try to validate the token and get data
   try {
     jwtPayload = <any>jwt.verify(token, process.env.JWT_SECRET);
-    console.log(jwtPayload);
     res.locals.jwtPayload = jwtPayload;
   } catch (error) {
     throw new HttpException(403, 'Unauthorized');

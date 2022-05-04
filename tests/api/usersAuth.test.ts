@@ -48,13 +48,16 @@ describe('User Auth API endpoint test', () => {
 
   //AUTHENTICATED REQUESTS//
   describe('Authenticated API calls', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       const endpoint = 'auth';
-      const resource = 'login';
+      const resource = 'register';
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
-      const userData: LoginDto = {
+      const userData: UserAuthEntity = {
+        uuid: `existingUserToDelete`,
+        username: 'jestTestRegister',
         password: 'jestTest123',
-        email: 'test@mail.com',
+        email: `testToDelete@mail.com`,
+        role: 'member',
       };
 
       const options: RequestInit = {
@@ -64,17 +67,8 @@ describe('User Auth API endpoint test', () => {
         },
         body: JSON.stringify(userData),
       };
-
       const response = await fetch(url, options);
-      let jsonRes;
-      try {
-        jsonRes = await response.json();
-      } catch (e) {
-        console.log(e);
-      }
-      expect(response.status).toBe(200);
       cookie = response.headers.get('Set-Cookie');
-      expect(cookie.split('Max-Age=')[1]).toBe('3600');
     });
 
     it('should edit user info', async () => {
@@ -83,9 +77,9 @@ describe('User Auth API endpoint test', () => {
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
       const editedData = {
-        uuid: 'existingUser',
+        uuid: 'existingUserToDelete',
         username: 'jestTestRegisterEdited',
-        email: 'test@mail.com',
+        email: 'testToDelete@mail.com',
         role: 'member',
       };
       const options: RequestInit = {
@@ -107,9 +101,9 @@ describe('User Auth API endpoint test', () => {
       const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
 
       const editedData = {
-        uuid: 'existingUser',
+        uuid: 'existingUserToDelete',
         username: 'jestTestRegister',
-        email: 'test@mail.com',
+        email: 'testToDelete@mail.com',
         role: 'member',
       };
       const options: RequestInit = {
@@ -123,6 +117,28 @@ describe('User Auth API endpoint test', () => {
 
       const response = await fetch(url, options);
       expect(response.status).toBe(204);
+    });
+
+    it("should delete a user's account", async () => {
+      jest.setTimeout(10000);
+      const resource = 'delete';
+      const url = `${BASE_URL}/${API_VESRION}/${endpoint}/${resource}`;
+
+      const deleteData = {
+        email: 'testToDelete@mail.com',
+        password: 'jestTest123',
+      };
+      const options: RequestInit = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: cookie,
+        },
+        body: JSON.stringify(deleteData),
+      };
+
+      const response = await fetch(url, options);
+      expect(response.status).toBe(200);
     });
   });
 });

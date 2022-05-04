@@ -76,6 +76,37 @@ class EventsService {
 
     return event;
   }
+
+  public async closeEvent(
+    eventId,
+    userId: string,
+    endDate: string,
+    review?: string,
+  ) {
+    const eventCreator = await this.eventRepo
+      .findOne({
+        where: {
+          id: eventId,
+        },
+      })
+      .then(res => res.creator.uuid);
+    if (eventCreator !== userId)
+      throw new HttpException(
+        403,
+        `${userId} not authorized to close this event`,
+      );
+    await this.eventRepo
+      .createQueryBuilder()
+      .update(EventEntity)
+      .set({
+        endDate: endDate,
+        review: review || '',
+      })
+      .where({
+        id: eventId,
+      })
+      .execute();
+  }
 }
 
 export default EventsService;
