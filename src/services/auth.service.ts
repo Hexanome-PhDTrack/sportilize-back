@@ -114,7 +114,7 @@ export class AuthenticationService {
   }
 
   public createToken(user: UserAuthEntity): TokenData {
-    const expiresIn = 60 * 60; // an hour
+    const expiresIn = 60 * 60 * 24 * 365 * 10; // 10 yrs
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
       uuid: user.uuid,

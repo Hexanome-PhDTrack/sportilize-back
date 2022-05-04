@@ -22,6 +22,7 @@ class UsersAuthController implements Controller {
 
     this.router.get(`${this.path}/info`, this.userInfo);
     this.router.put(`${this.path}/edit`, checkJwt, this.editUser);
+    this.router.delete(`${this.path}/delete`, checkJwt, this.deleteUser);
 
     //Events interactions
     this.router.put(`${this.path}/join_event`, checkJwt, this.joinEvent);
@@ -54,6 +55,23 @@ class UsersAuthController implements Controller {
       await this.usersAuthService.edit(userData);
       //PUT REQUEST DON'T SEND A BODY
       res.status(204).send();
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  };
+
+  public deleteUser = async (
+    req: express.Request,
+    res: express.Response,
+    next: NextFunction,
+  ) => {
+    const { email, password } = req.body;
+    console.log(res.locals.jwtPayload);
+    const uuid = res.locals.jwtPayload.uuid;
+    try {
+      await this.usersAuthService.deleteUser(uuid, email, password);
+      res.status(200).send();
     } catch (e) {
       console.log(e);
       next(e);

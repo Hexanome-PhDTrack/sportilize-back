@@ -20,6 +20,7 @@ import UserService from '../services/user.service';
 import UserNotFoundException from '../exceptions/UserNotFoundException';
 import EventNotFoundException from '../exceptions/EventNotFoundException';
 import GetEventsByInfraInput from '../inputClasses/GetEventsByInfraInput';
+// @ts-ignore
 import CloseEventInput from '../inputClasses/CloseEventInput';
 
 class EventsController implements Controller {
