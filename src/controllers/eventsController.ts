@@ -286,10 +286,11 @@ class EventsController implements Controller {
     next: express.NextFunction,
   ) => {
     try {
+      console.log(req.path);
       const uuid: string = req.query.uuid as string;
       const user: UserEntity = await this.userService.getUser(uuid);
       if (!user) {
-        throw new UserNotFoundException(user.uuid);
+        throw new UserNotFoundException(uuid);
       }
 
       const events: Array<EventEntity> =

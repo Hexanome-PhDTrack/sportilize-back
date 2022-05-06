@@ -444,7 +444,7 @@ describe('Events interaction with unlogged user', () => {
   it('Should list all event which the user participate', async () => {
     const getParticipateResource = 'get_events_to_participate';
     const queryParams: any = {
-      uuid: '18c0a621-59e3-4800-8061-f07f94477d56',
+      uuid: '8f9d3105-e591-4386-bbd6-8e6ac651db28',
     };
 
     const params = new URLSearchParams(queryParams).toString();
